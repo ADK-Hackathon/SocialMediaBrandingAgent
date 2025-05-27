@@ -64,3 +64,13 @@ Open your web browser to visit:
 `http://localhost:8000`
 
 Selet "smba-backend" agent > Type "https://x.com/elonmusk" in chat input > Enter
+
+### Docker Build and Run
+
+    ```bash
+    # Build the image
+    docker build -t agent-backend .
+
+    # Run the container
+    docker run -p 8080:8080 agent-backend
+    ```
