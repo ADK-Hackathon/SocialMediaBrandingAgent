@@ -42,35 +42,33 @@ The backend API for the Social Media Branding Agent (SMBA) project, built using 
 
 2.  **Run the following command to launch the dev UI:**
     ```bash
-    (cd src && adk web)
+    poetry run start
     ```
 
     You should see output similar to this:
     ```
-    INFO:     Started server process [10282]
+    INFO:     Will watch for changes in these directories: ['/workspaces/SocialMediaBrandingAgent/agents']
+    INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+    INFO:     Started reloader process [15238] using StatReload
+    INFO:     Started server process [15288]
     INFO:     Waiting for application startup.
-    +-----------------------------------------------------------------------------+
-    | ADK Web Server started                                                      |
-    | For local testing, access at http://localhost:8000.                         |
-    +-----------------------------------------------------------------------------+
     INFO:     Application startup complete.
-    INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
     ```
 
 ### Testing the Agent
 
 Open your web browser to visit:
 
-`http://localhost:8000`
+`http://localhost:8080`
 
 Selet "smba-backend" agent > Type "https://x.com/elonmusk" in chat input > Enter
 
 ### Docker Build and Run
 
-    ```bash
-    # Build the image
-    docker build -t agent-backend .
+```bash
+# Build the image
+docker build -t agent-backend .
 
-    # Run the container
-    docker run -p 8080:8080 agent-backend
-    ```
+# Run the container
+docker run -p 8080:8080 agent-backend
+```
