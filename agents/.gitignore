@@ -175,3 +175,9 @@ cython_debug/
 
 # ADK tmp db
 sessions.db
+
+.DS_Store
+**/.DS_Store
+
+# TODO(syu 5/27/2025): Maybe save to GCP Cloud Storage
+generated_images/
