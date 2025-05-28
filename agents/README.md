@@ -11,7 +11,9 @@ The backend API for the Social Media Branding Agent (SMBA) project, built using 
 
 2.  **Activate virtual environment (it is automatically created by poetry):**
     Doc: https://python-poetry.org/docs/basic-usage/#using-your-virtual-environment
+    requires Python version >=3.12
     ```bash
+    cd agents
     eval $(poetry env activate)
     ```
 
@@ -22,7 +24,6 @@ The backend API for the Social Media Branding Agent (SMBA) project, built using 
 
 4. **Create .env file (under smba-backend folder)**
     ```bash
-    cd agents
     touch src/agents/.env
     ```
 
@@ -60,9 +61,9 @@ The backend API for the Social Media Branding Agent (SMBA) project, built using 
 
 Open your web browser to visit:
 
-`http://localhost:8080`
+`http://0.0.0.0:8080`
 
-Selet "smba-backend" agent > Type "https://x.com/elonmusk" in chat input > Enter
+Selet "agents" agent > Type "https://x.com/elonmusk" in chat input > Enter
 
 ### Docker Build and Run
 
