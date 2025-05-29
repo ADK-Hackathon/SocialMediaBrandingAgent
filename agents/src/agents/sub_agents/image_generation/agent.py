@@ -20,8 +20,7 @@ client = Client(
 # Initialize Google Cloud Storage client
 storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
 # TODO(syu 5/28/2025): handle ACL later
-# Set permission to "New principals": "allUsers"; "Select a role": "Storage Object Viewer"
-GCS_BUCKET_NAME = "smba-images"
+GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
 def generate_image(img_prompt: str, tool_context: "ToolContext"):
