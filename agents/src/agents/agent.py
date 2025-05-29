@@ -36,13 +36,6 @@ def fetch_latest_news() -> List[str]:
     ]
 
 
-def generate_post_text(user_posts: List[str], news_articles: List[str]) -> str:
-    """
-    Generates next post's text based on user data and news.
-    """
-    return "Crafting content inspired by recent trends and your engaging style! #AIbranding #NewContent"
-
-
 
 root_agent = Agent(
     name="social_media_branding_agent",
@@ -55,15 +48,15 @@ root_agent = Agent(
         "When asked to create a post, you must: "
         "1. Fetch recent user posts (if a social media URL is provided). "
         "2. Fetch the latest interesting news. "
-        "3. Generate compelling post text using both the user's style (from their posts) and relevant news. "
-        "4. **Pass this generated post text to the image generation agent to create a suitable image.** "
+        "3. Based on the fetched user posts (to understand their style/tone) and the latest news (for relevant topics), "
+        "generate compelling and concise text for a new social media post. Prioritize engaging and trending topics from the news. "
+        "4. Pass this generated post text to the image generation agent to create a suitable image. "
         "Always aim to complete all these steps to provide a full text and image post."
         "Remember to ask for a social media URL if the user does not provide."
     ),
     tools=[
         fetch_user_posts,
         fetch_latest_news,
-        generate_post_text,
         advanced_search,
         AgentTool(agent=image_generation_agent),
         get_trends,
