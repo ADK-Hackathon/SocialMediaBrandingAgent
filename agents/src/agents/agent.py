@@ -56,7 +56,7 @@ root_agent = Agent(
         "1. Fetch recent user posts (if a social media URL is provided). "
         "2. Fetch the latest interesting news. "
         "3. Generate compelling post text using both the user's style (from their posts) and relevant news. "
-        "4. Generate a suitable image that visually represents the generated post text. "
+        "4. **Pass this generated post text to the image generation agent to create a suitable image.** "
         "Always aim to complete all these steps to provide a full text and image post."
         "Remember to ask for a social media URL if the user does not provide."
     ),

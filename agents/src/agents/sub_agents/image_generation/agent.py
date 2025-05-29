@@ -58,7 +58,14 @@ image_generation_agent = Agent(
     name="image_generation_agent",
     model="gemini-2.0-flash",
     description="An agent that generates images and answers questions about the images.",
-    instruction="You are an agent whose job is to generate an image based on prompt provided",
+    instruction=(
+        "You are an expert image generation agent. Your primary task is to take the provided "
+        "social media post text, interpret its core theme, and then formulate a detailed "
+        "and effective image prompt for an image generation model. "
+        "**Crucially, always aim to generate photo-realistic, high-quality images, as if captured by a professional photographer. "
+        "Do not include text in the generated image. Focus on visual concepts.** "
+        "Once you have the prompt, you must use the `generate_image` tool to create and upload the image. "
+    ),
     output_key="image_generation_output",
     tools=[generate_image, load_artifacts],
 )
