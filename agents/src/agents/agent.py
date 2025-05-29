@@ -1,5 +1,7 @@
 from google.adk.agents import Agent
+from google.adk.tools.agent_tool import AgentTool
 from typing import List, Optional, Dict
+from .sub_agents.image_generation import image_generation_agent
 from .twitter_tools import advanced_search, get_trends
 
 
@@ -40,14 +42,6 @@ def generate_post_text(user_posts: List[str], news_articles: List[str]) -> str:
     """
     return "Crafting content inspired by recent trends and your engaging style! #AIbranding #NewContent"
 
-def generate_post_image(post_text: str) -> str:
-    """
-    Generates an image by using the given post text to create an image generation prompt,
-    then sends the prompt to an image generation model.
-    Returns a image URL
-    """
-    return "https://example.com/static_generated_image.png"
-
 
 
 root_agent = Agent(
@@ -70,8 +64,8 @@ root_agent = Agent(
         fetch_user_posts,
         fetch_latest_news,
         generate_post_text,
-        generate_post_image,
         advanced_search,
+        AgentTool(agent=image_generation_agent),
         get_trends,
     ],
 )
