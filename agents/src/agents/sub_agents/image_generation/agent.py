@@ -4,6 +4,7 @@ import datetime
 from dotenv import load_dotenv
 from google.adk import Agent
 from google.adk.tools import ToolContext, load_artifacts
+from google.cloud import storage
 from google.genai import Client, types
 
 
@@ -15,6 +16,12 @@ client = Client(
     project=os.getenv("GOOGLE_CLOUD_PROJECT"),
     location=os.getenv("GOOGLE_CLOUD_LOCATION"),
 )
+
+# Initialize Google Cloud Storage client
+storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
+# TODO(syu 5/28/2025): handle ACL later
+# Set permission to "New principals": "allUsers"; "Select a role": "Storage Object Viewer"
+GCS_BUCKET_NAME = "smba-images"
 
 
 def generate_image(img_prompt: str, tool_context: "ToolContext"):
@@ -30,25 +37,22 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
     image_bytes = response.generated_images[0].image.image_bytes
 
 
-    # TODO(syu 5/27/2025): Maybe save to GCP Cloud Storage
-    output_directory = "generated_images"
-    os.makedirs(output_directory, exist_ok=True) # Create the directory if it doesn't exist
-
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    image_filename = f"image_{timestamp}.png" # e.g., image_20250527_223042.png
-    output_path = os.path.join(output_directory, image_filename)
+    gcs_object_name = f"smba_image_{timestamp}.png"
 
     try:
-        with open(output_path, "wb") as f:
-            f.write(image_bytes)
+        bucket = storage_client.bucket(GCS_BUCKET_NAME)
+
+        blob = bucket.blob(gcs_object_name)
+        blob.upload_from_string(image_bytes, content_type="image/png")
+
         return {
             "status": "success",
-            "detail": f"Image generated and saved to {output_path}",
-            "filename": image_filename,
-            "path": output_path,
+            "detail": "Image generated and uploaded to GCS",
+            "image_url": blob.public_url,
         }
     except IOError as e:
-        return {"status": "failed", "detail": f"Failed to save image: {e}"}
+        return {"status": "failed", "detail": f"Failed to upload image to GCS: {e}"}
 
 
 image_generation_agent = Agent(
