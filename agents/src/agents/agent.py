@@ -1,6 +1,6 @@
 from google.adk.agents import Agent
 from typing import List, Optional, Dict
-from .twitter_tools import advanced_search
+from .twitter_tools import advanced_search, get_trends
 
 
 def fetch_user_posts(social_media_url: str) -> List[str]:
@@ -72,5 +72,6 @@ root_agent = Agent(
         generate_post_text,
         generate_post_image,
         advanced_search,
+        get_trends,
     ],
 )
