@@ -1,5 +1,6 @@
 import { BellIcon } from '@heroicons/react/24/outline'
 import ToolBar from '../components/tool_bar'
+import BuildBlocks from '../components/build_blocks'
 
 export default function MainPage() {
   return (
@@ -30,10 +31,12 @@ export default function MainPage() {
 
       <div className="mx-auto flex w-full max-w-7xl items-start gap-x-8 py-10 sm:px-2 lg:px-4">
         <aside className="sticky top-8 hidden w-44 shrink-0 lg:block">
-          <ToolBar />
+            <ToolBar />
         </aside>
 
-        <main className="flex-1">{/* Main area */}</main>
+        <main className="flex-1">
+            <BuildBlocks />
+        </main>
 
         <aside className="sticky top-8 hidden w-96 shrink-0 xl:block">{/* Right column area */}</aside>
       </div>
