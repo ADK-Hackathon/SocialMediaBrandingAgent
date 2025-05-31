@@ -44,6 +44,14 @@ The backend API for the Social Media Branding Agent (SMBA) project, built using 
     eval $(poetry env activate)
     ```
 
+1.  **Make sure you've authenticated to Google Cloud**:
+    ```bash
+    gcloud auth list
+    ```
+    ```bash
+    gcloud config set project <PROJECT_ID>
+    ```
+
 2.  **Run the following command to launch the dev UI:**
     ```bash
     poetry run start
