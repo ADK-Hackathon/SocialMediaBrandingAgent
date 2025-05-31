@@ -1,7 +1,7 @@
 # Make sure you are at the frontend directory
 
 ```bash
-$ cd frontment
+$ cd frontent
 ```
 
 # Install the dependencies
