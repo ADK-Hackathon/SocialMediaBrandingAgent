@@ -1,6 +1,7 @@
 import { BellIcon } from '@heroicons/react/24/outline'
 import ToolBar from '../components/tool_bar'
 import BuildBlocks from '../components/build_blocks'
+import ChatInterface from '../components/ChatInterface'
 
 export default function MainPage() {
   return (
@@ -29,7 +30,7 @@ export default function MainPage() {
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-7xl items-start gap-x-8 py-10 sm:px-2 lg:px-4">
+      <div className="mx-auto flex flex-1 w-full max-w-7xl items-start gap-x-8 py-10 sm:px-2 lg:px-4">
         <aside className="sticky top-8 hidden w-44 shrink-0 lg:block">
             <ToolBar />
         </aside>
@@ -38,7 +39,9 @@ export default function MainPage() {
             <BuildBlocks />
         </main>
 
-        <aside className="sticky top-8 hidden w-96 shrink-0 xl:block">{/* Right column area */}</aside>
+        <aside className="sticky top-8 hidden w-96 h-[70vh] shrink-0 xl:block flex flex-col bg-white rounded-lg shadow-lg overflow-hidden">
+          <ChatInterface />
+        </aside>
       </div>
     </div>
   )
