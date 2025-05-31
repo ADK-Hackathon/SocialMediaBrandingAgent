@@ -3,6 +3,7 @@ from google.adk.tools.agent_tool import AgentTool
 from typing import List, Optional, Dict
 from .sub_agents.image_generation import image_generation_agent
 from .sub_agents.video_generation import video_generation_agent
+from .sub_agents.audio_generation import audio_generation_agent
 from .twitter_tools import advanced_search, get_trends
 
 
@@ -37,7 +38,6 @@ def fetch_latest_news() -> List[str]:
     ]
 
 
-
 root_agent = Agent(
     name="social_media_branding_agent",
     model="gemini-2.0-flash",
@@ -53,6 +53,7 @@ root_agent = Agent(
         "generate compelling and concise text for a new social media post. Prioritize engaging and trending topics from the news. "
         "4. Pass this generated post text to the image generation agent to create a suitable image. "
         "5. Pass both the generated post text AND the generated image URL to the video generation agent to create a suitable video. "
+        "6. Ask the user to describe what they want to mention and narrate in the post. Then delegate to `audio_generation_agent` to generate the narration text and audio. "
         "Always aim to complete all these steps to provide a full text and image/video post."
         "Remember to ask for a social media URL if the user does not provide."
     ),
@@ -64,4 +65,5 @@ root_agent = Agent(
         AgentTool(agent=video_generation_agent),
         get_trends,
     ],
+    sub_agents=[audio_generation_agent,],
 )
