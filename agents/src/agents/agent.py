@@ -4,21 +4,7 @@ from typing import List, Optional, Dict
 from .sub_agents.image_generation import image_generation_agent
 from .sub_agents.video_generation import video_generation_agent
 from .sub_agents.audio_generation import audio_generation_agent
-from .twitter_tools import advanced_search, get_trends
-
-
-def fetch_user_posts(social_media_url: str) -> List[str]:
-    """
-    Retrieves the latest 5 posts for a given social media account URL.
-    """
-    return [
-        f"Just launched our new product line!",
-        f"Had a great time at the industry conference.",
-        f"A quick tip for improving productivity.",
-        f"Behind the scenes look at our team.",
-        f"Engaging with followers on our latest poll."
-    ]
-
+from .twitter_tools import advanced_search, get_trends, get_user_posts
 
 def fetch_latest_news() -> List[str]:
     """
@@ -58,7 +44,7 @@ root_agent = Agent(
         "Remember to ask for a social media URL if the user does not provide."
     ),
     tools=[
-        fetch_user_posts,
+        get_user_posts,
         fetch_latest_news,
         advanced_search,
         AgentTool(agent=image_generation_agent),
