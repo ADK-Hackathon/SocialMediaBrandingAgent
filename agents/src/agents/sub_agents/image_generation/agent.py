@@ -25,6 +25,14 @@ GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 def generate_image(img_prompt: str, tool_context: "ToolContext"):
     """Generates an image based on the prompt."""
+
+    """Use below static return to save the cost while testing"""
+    # return {
+    #     "status": "success",
+    #     "detail": "Image generated and uploaded to GCS",
+    #     "image_url": "https://storage.googleapis.com/smba-assets/smba_image_20250529_111352.png",
+    # }
+
     response = client.models.generate_images(
         model="imagen-3.0-generate-002",
         prompt=img_prompt,
