@@ -3,7 +3,7 @@ import datetime
 
 from dotenv import load_dotenv
 from google.adk import Agent
-from google.adk.tools import ToolContext, load_artifacts
+from google.adk.tools import ToolContext
 from google.cloud import storage
 from google.genai import Client, types
 
@@ -30,7 +30,7 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
     # return {
     #     "status": "success",
     #     "detail": "Image generated and uploaded to GCS",
-    #     "image_url": "https://storage.googleapis.com/smba-assets/smba_image_20250529_111352.png",
+    #     "image_url": "https://storage.googleapis.com/smba-assets/images/20250531_180420.png",
     # }
 
     response = client.models.generate_images(
@@ -45,7 +45,7 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
 
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    gcs_object_name = f"smba_image_{timestamp}.png"
+    gcs_object_name = f"images/{timestamp}.png"
 
     try:
         bucket = storage_client.bucket(GCS_BUCKET_NAME)
@@ -75,5 +75,5 @@ image_generation_agent = Agent(
         "Once you have the prompt, you must use the `generate_image` tool to create and upload the image. "
     ),
     output_key="image_generation_output",
-    tools=[generate_image, load_artifacts],
+    tools=[generate_image],
 )
