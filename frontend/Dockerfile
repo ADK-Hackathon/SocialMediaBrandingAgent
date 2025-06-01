@@ -45,8 +45,8 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # If you create default.conf, uncomment the next line:
 # COPY default.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8080
+EXPOSE 8080
 
 # Start Nginx when the container launches
 CMD ["nginx", "-g", "daemon off;"] 
