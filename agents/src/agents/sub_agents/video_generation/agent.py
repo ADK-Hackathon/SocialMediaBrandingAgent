@@ -8,6 +8,8 @@ from google.adk.tools import ToolContext
 from google.cloud import storage
 from google.genai import Client
 from google.genai.types import GenerateVideosConfig, Image
+from agents.utils.gcs_url_converters import gcs_uri_to_public_url, public_url_to_gcs_uri
+
 
 load_dotenv()
 
@@ -25,17 +27,24 @@ GCS_BUCKET_NAME = "smba-assets" # Public to internet
 def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolContext"):
     """Generates a video based on an image and post text context."""
 
+    """Use below static return to save the cost while testing"""
+    # return {
+    #     "status": "success",
+    #     "detail": "Video generated and uploaded to GCS",
+    #     "video_url": "https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4",
+    # }
+
     output_gcs_uri = f"gs://{GCS_BUCKET_NAME}/videos"
 
     try:
         operation = client.models.generate_videos(
-            # model="veo-3.0-generate-preview",
+            # model="veo-3.0-generate-preview",  # hope we can use this asap
             model="veo-2.0-generate-001",
             prompt=video_prompt,
-            # image=Image(
-            #     gcs_uri=image_gcs_uri,
-            #     mime_type="image/png",
-            # ),
+            image=Image(
+                gcs_uri=public_url_to_gcs_uri(image_gcs_uri),
+                mime_type="image/png",
+            ),
             config=GenerateVideosConfig(
                 aspect_ratio="16:9",
                 output_gcs_uri=output_gcs_uri,
@@ -54,13 +63,10 @@ def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolCon
 
             generated_video_uri = operation.result.generated_videos[0].video.uri
 
-            # Convert gs:// URI to public HTTP URL
-            public_video_url = generated_video_uri.replace("gs://", "https://storage.googleapis.com/")
-
             return {
                 "status": "success",
                 "detail": "Video generated and uploaded to GCS",
-                "video_url": public_video_url,
+                "video_url": gcs_uri_to_public_url(generated_video_uri),
             }
         else:
             return {
