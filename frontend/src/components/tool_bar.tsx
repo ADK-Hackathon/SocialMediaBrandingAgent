@@ -1,7 +1,5 @@
 import { 
     UsersIcon,
-    DocumentDuplicateIcon, 
-    ChartPieIcon, 
     ArrowTrendingUpIcon,
     SparklesIcon,
     DocumentTextIcon,
