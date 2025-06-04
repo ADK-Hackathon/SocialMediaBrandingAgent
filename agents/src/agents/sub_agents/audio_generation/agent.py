@@ -1,9 +1,29 @@
+import datetime
+import os
+from dotenv import load_dotenv
 from google.adk.agents import Agent
 import google.cloud.texttospeech as tts
 from typing import Sequence
+from google.cloud import storage
+from google.genai import Client
+
+
+load_dotenv()
+
+# Only Vertex AI supports image generation for now.
+client = Client(
+    vertexai=True,
+    project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION"),
+)
+
+# Initialize Google Cloud Storage client
+storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
+GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
 def unique_languages_from_voices(voices: Sequence[tts.Voice]):
+    """List all supported languages from Google TTS."""
     language_set = set()
     for voice in voices:
         for language_code in voice.language_codes:
@@ -12,6 +32,7 @@ def unique_languages_from_voices(voices: Sequence[tts.Voice]):
 
 
 def list_languages():
+    """Print all langauges supported by Google TTS."""
     client = tts.TextToSpeechClient()
     response = client.list_voices()
     languages = unique_languages_from_voices(response.voices)
@@ -22,6 +43,7 @@ def list_languages():
 
 
 def list_voices(language_code=None):
+    """Print all voices supported by Google TTS for a given language code."""
     client = tts.TextToSpeechClient()
     response = client.list_voices(language_code=language_code)
     voices = sorted(response.voices, key=lambda voice: voice.name)
@@ -35,8 +57,8 @@ def list_voices(language_code=None):
         print(f"{languages:<8} | {name:<24} | {gender:<8} | {rate:,} Hz")
 
 
-def text_to_wav(voice_name: str, text: str) -> str:
-    """Generates a WAV file from the provided text using the specified voice."""
+def text_to_wav(voice_name: str, text: str) -> bytes:
+    """Generates a WAV file bytes from the provided text using the specified voice."""
     language_code = "-".join(voice_name.split("-")[:2])
     text_input = tts.SynthesisInput(text=text)
     voice_params = tts.VoiceSelectionParams(
@@ -50,19 +72,29 @@ def text_to_wav(voice_name: str, text: str) -> str:
         voice=voice_params,
         audio_config=audio_config,
     )
-
-    filename = f"generated_audio/narration-audio.wav"
-    with open(filename, "wb") as out:
-        out.write(response.audio_content)
-        print(f'Generated speech saved to "{filename}"')
-    return filename
+    return response.audio_content
 
 
-def generate_audio(narration_text: str) -> str:
+def generate_audio(narration_text: str):
     """Generates an audio narration based on the provided text."""
-    # Placeholder for actual audio generation logic
-    # In a real implementation, this would call an audio generation API or library
-    return text_to_wav("en-US-Chirp3-HD-Erinome", narration_text)
+    audio_bytes: bytes = text_to_wav("en-US-Chirp3-HD-Erinome", narration_text)
+
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    gcs_object_name = f"audios/{timestamp}.wav"
+
+    try:
+        bucket = storage_client.bucket(GCS_BUCKET_NAME)
+
+        blob = bucket.blob(gcs_object_name)
+        blob.upload_from_string(audio_bytes, content_type="audio/wav")
+
+        return {
+            "status": "success",
+            "detail": "Audio generated and uploaded to GCS",
+            "audio_url": blob.public_url,
+        }
+    except IOError as e:
+        return {"status": "failed", "detail": f"Failed to upload audio to GCS: {e}"}
 
 
 audio_generation_agent = Agent(
