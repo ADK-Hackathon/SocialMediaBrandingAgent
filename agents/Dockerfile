@@ -1,4 +1,14 @@
 FROM python:3.13-slim
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install FFmpeg in one RUN step, then clean up apt lists
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Install poetry
