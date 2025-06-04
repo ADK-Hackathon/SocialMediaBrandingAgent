@@ -1,8 +1,9 @@
 import GoalBlock from "./blocks/goal_block";
 import AudienceBlock from "./blocks/audience_block";
 import GuidelineBlock from "./blocks/guideline_block";
-import TikTokPostBlock from "./blocks/tiktok_post_block";
 import InstagramPostBlock from "./blocks/instagram_post_block";
+import TikTokPostBlock from "./blocks/tiktok_post_block";
+import TwitterPostBlock from "./blocks/twitter_post_block";
 
 export default function BuildBlocks() {
   return (
@@ -42,6 +43,14 @@ export default function BuildBlocks() {
         </li>
         <li className="overflow-hidden rounded-xl border border-gray-200">
             <InstagramPostBlock
+                mediaUrl="https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4"
+                contentText="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
+                username="cool_dev"
+                profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"
+            />
+        </li>
+        <li className="overflow-hidden rounded-xl border border-gray-200">
+            <TwitterPostBlock
                 mediaUrl="https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4"
                 contentText="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
                 username="cool_dev"
