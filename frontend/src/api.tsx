@@ -40,6 +40,16 @@ interface AgentResponse {
   timestamp: number;
 }
 
+// Define the response type for starting a new session
+interface StartSessionResponse {
+  id: string;
+  appName: string;
+  userId: string;
+  state: Record<string, any>;
+  events: any[];
+  lastUpdateTime: number;
+}
+
 // Callbacks interface for handling SSE events
 interface SSECallbacks {
   onData: (data: AgentResponse) => void;
@@ -156,6 +166,51 @@ export const sendMessageToAgentSSE = (
       callbacks.onComplete();
     }
   };
+};
+
+// Function to start a new session
+export const startNewSession = async (userId: string): Promise<string> => {
+  // Generate a client-side session ID, e.g., using UUID
+  const newSessionId = `s_${crypto.randomUUID()}`;
+  const requestUrl = `${API_BASE_URL}/apps/agents/users/${userId}/sessions/${newSessionId}`;
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}), // Sending an empty JSON object as per Content-Type
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      // Enhanced error logging with URL
+      console.error(`[START SESSION HTTP ERROR ${response.status}]`, errorBody, 'on URL:', requestUrl);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: StartSessionResponse = await response.json();
+    if (!data.id) {
+      // Enhanced error logging with URL
+      console.error('[START SESSION ERROR]', 'id (session_id) not found in response', data, 'on URL:', requestUrl);
+      throw new Error('Session ID (id) not found in response.');
+    }
+    // Optionally, you might want to verify if data.id matches newSessionId
+    // For example: if (data.id !== newSessionId) console.warn(...);
+    return data.id; // Return the session ID from the backend's response (data.id)
+  } catch (error) {
+    // Improved catch block to provide more details and avoid re-wrapping Error instances
+    if (error instanceof Error) {
+        console.error('[START SESSION FETCH ERROR]', error.message, 'on URL:', requestUrl, error);
+        throw error;
+    } else {
+        // Catching non-Error types (e.g., strings) and converting to Error
+        const errorMessage = String(error);
+        console.error('[START SESSION FETCH ERROR]', errorMessage, 'on URL:', requestUrl, error);
+        throw new Error(errorMessage);
+    }
+  }
 };
 
 // Helper function to extract text content from agent response

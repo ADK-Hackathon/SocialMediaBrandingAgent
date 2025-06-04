@@ -8,7 +8,13 @@ interface Message {
   isComplete?: boolean;
 }
 
-export default function ChatInterface() {
+// Define props interface
+interface ChatInterfaceProps {
+  userId: string;
+  sessionId: string;
+}
+
+export default function ChatInterface({ userId, sessionId }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'agent', content: 'Hi! I am your social media branding agent. How can I help you today?', isComplete: true }
   ]);
@@ -44,8 +50,8 @@ export default function ChatInterface() {
     // Send message to agent
     const cleanup = sendMessageToAgentSSE(
       inputMessage,
-      "u_123",
-      "s_123",
+      userId,    // Use prop
+      sessionId, // Use prop
       {
         onData: (response) => {
           const text = extractTextFromResponse(response);

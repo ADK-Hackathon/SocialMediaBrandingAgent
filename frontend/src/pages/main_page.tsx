@@ -3,7 +3,13 @@ import ToolBar from '../components/tool_bar'
 import BuildBlocks from '../components/build_blocks'
 import ChatInterface from '../components/ChatInterface'
 
-export default function MainPage() {
+// Define props interface
+interface MainPageProps {
+  userId: string;
+  sessionId: string;
+}
+
+export default function MainPage({ userId, sessionId }: MainPageProps) {
   return (
     <div className="flex min-h-full flex-col">
       <header className="shrink-0 border-b border-gray-200 bg-white">
@@ -40,7 +46,7 @@ export default function MainPage() {
         </main>
 
         <aside className="sticky top-8 hidden w-96 h-[70vh] shrink-0 xl:block flex flex-col bg-white rounded-lg shadow-lg overflow-hidden">
-          <ChatInterface />
+          <ChatInterface userId={userId} sessionId={sessionId} />
         </aside>
       </div>
     </div>
