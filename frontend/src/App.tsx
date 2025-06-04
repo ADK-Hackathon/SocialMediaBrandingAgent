@@ -4,7 +4,7 @@ import MainPage from './pages/main_page';
 
 function App() {
   // TODO: Replace "u_123" with actual user ID retrieval logic
-  const [userId, setUserId] = useState<string>("u_123"); 
+  const [userId, _] = useState<string>("u_123"); 
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
