@@ -9,7 +9,8 @@ import {
 
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTwitter, faYoutube, faTiktok, faInstagram } from '@fortawesome/free-brands-svg-icons'
+import { faXTwitter, faYoutube, faTiktok, faInstagram } from '@fortawesome/free-brands-svg-icons'
+
 
 const context_blocks = [
     {
@@ -49,8 +50,8 @@ const intermediate_blocks = [
 
 const artifact_blocks = [
     {
-        name: 'Twitter',
-        icon: faTwitter,
+        name: 'X',
+        icon: faXTwitter,
         href: '#',
     },
     {
