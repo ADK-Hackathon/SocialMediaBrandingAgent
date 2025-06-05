@@ -67,13 +67,13 @@ def merge_audio_to_video(
     video_clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
 
 
-def assemble_video_with_audio(video_gcs_uri: str, audio_gcs_uri: str):
+def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: str):
     """
-    Assembles a video with audio from Google Cloud Storage URIs.
+    Assembles a video with audio so it has sound. Both video and audio are downloaded from Google Cloud Storage.
 
     Args:
-        video_gcs_uri (str): GCS URI of the input video file.
-        audio_gcs_uri (str): GCS URI of the input audio file.
+        video_gcs_public_url (str): GCS public URL of the input video file.
+        audio_gcs_public_url (str): GCS public URL of the input audio file.
     """
     # Download files from GCS
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -82,9 +82,9 @@ def assemble_video_with_audio(video_gcs_uri: str, audio_gcs_uri: str):
 
     try:
         download_file_from_gcs(get_blob_name_from_gcs_uri(
-            public_url_to_gcs_uri(video_gcs_uri)), video_path)
+            public_url_to_gcs_uri(video_gcs_public_url)), video_path)
         download_file_from_gcs(get_blob_name_from_gcs_uri(
-            public_url_to_gcs_uri(audio_gcs_uri)), audio_path)
+            public_url_to_gcs_uri(audio_gcs_public_url)), audio_path)
     except Exception as e:
         print(f"Failed to download files from GCS: {e}")
         return {"status": "failed", "detail": f"Download failed: {e}"}
@@ -114,13 +114,13 @@ def assemble_video_with_audio(video_gcs_uri: str, audio_gcs_uri: str):
 
 if __name__ == "__main__":
     # Example usage
-    merge_audio_to_video(
-        video_path="generated_video/sample_0.mp4",
-        audio_path="generated_audio/narration-audio.wav",
-        output_path="generated_video/video_with_sound.mp4"
-    )
+    # merge_audio_to_video(
+    #     video_path="generated_video/sample_0.mp4",
+    #     audio_path="generated_audio/narration-audio.wav",
+    #     output_path="generated_video/video_with_sound.mp4"
+    # )
     status = assemble_video_with_audio(
-        video_gcs_uri="https://storage.googleapis.com/smba-assets/videos/11611916828487350363/sample_0.mp4",
-        audio_gcs_uri="https://storage.googleapis.com/smba-assets/audios/20250604_002905.wav"
+        video_gcs_public_url="https://storage.googleapis.com/smba-assets/videos/11611916828487350363/sample_0.mp4",
+        audio_gcs_public_url="https://storage.googleapis.com/smba-assets/audios/20250604_002905.wav"
     )
     print(status)

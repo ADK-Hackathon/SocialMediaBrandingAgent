@@ -5,6 +5,8 @@ from .sub_agents.image_generation import image_generation_agent
 from .sub_agents.video_generation import video_generation_agent
 from .sub_agents.audio_generation import audio_generation_agent
 from .twitter_tools import advanced_search, get_trends, get_user_posts
+from .video_editing_tools import assemble_video_with_audio
+
 
 def fetch_latest_news() -> List[str]:
     """
@@ -39,7 +41,8 @@ root_agent = Agent(
         "generate compelling and concise text for a new social media post. Prioritize engaging and trending topics from the news. "
         "4. Pass this generated post text to the image generation agent to create a suitable image. "
         "5. Pass both the generated post text AND the generated image URL to the video generation agent to create a suitable video. "
-        "6. Ask the user to describe what they want to mention and narrate in the post. Then delegate to `audio_generation_agent` to generate the narration text and audio. "
+        "6. Ask the user to describe what they want to mention and narrate in the post. Then delegate to audio_generation_agent to generate the narration text and audio. "
+        "7. Finally, assemble the audio narration with the video using the `assemble_video_with_audio` tool. You'll need to pass the video URL and the narration audio URL to this tool. "
         "Always aim to complete all these steps to provide a full text and image/video post."
         "Remember to ask for a social media URL if the user does not provide."
     ),
@@ -49,7 +52,8 @@ root_agent = Agent(
         advanced_search,
         AgentTool(agent=image_generation_agent),
         AgentTool(agent=video_generation_agent),
+        AgentTool(agent=audio_generation_agent),
         get_trends,
+        assemble_video_with_audio,
     ],
-    sub_agents=[audio_generation_agent,],
 )
