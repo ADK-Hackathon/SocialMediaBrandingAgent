@@ -5,6 +5,10 @@ export default function BaseBlock({
   icon: IconComponent,
   title,
   content,
+}: {
+  icon: any;
+  title: string;
+  content: React.ReactNode;
 }) {
   return (
     <div>
