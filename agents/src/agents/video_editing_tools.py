@@ -49,7 +49,7 @@ def merge_audio_to_video(
         output_path (str): Path where the output video with audio will be saved.
     """
 
-    video_clip = mp.VideoFileClip(video_path)
+    video_clip: mp.VideoFileClip = mp.VideoFileClip(video_path)
     audio_clip = mp.AudioFileClip(audio_path)
 
     # Get durations of video and audio
@@ -59,7 +59,9 @@ def merge_audio_to_video(
     # If their length doesn't match, scale the video speed.
     if abs(video_duration - audio_duration) > 0.1:
         video_speed_factor = video_duration / audio_duration
-        video_clip = video_clip.with_speed_scaled(video_speed_factor)
+        scaled_video_clip = video_clip.with_speed_scaled(video_speed_factor)
+        assert isinstance(scaled_video_clip, mp.VideoFileClip)
+        video_clip = scaled_video_clip
 
     # Attach the audio to the video
     video_clip = video_clip.with_audio(audio_clip)
@@ -82,11 +84,24 @@ def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: s
     video_path = os.path.join(tmp_dir, f"temp_video_{timestamp}.mp4")
     audio_path = os.path.join(tmp_dir, f"temp_audio_{timestamp}.wav")
 
+    # Convert public URL to GCS URI and extract blob name for video
+    # Video
+    if not (video_uri := public_url_to_gcs_uri(video_gcs_public_url)) \
+            or not (video_blob := get_blob_name_from_gcs_uri(video_uri)):
+        return {
+            "status": "failed",
+            "detail": f"Invalid video URL: {video_gcs_public_url}"
+        }
+    if not (audio_uri := public_url_to_gcs_uri(audio_gcs_public_url)) \
+            or not (audio_blob := get_blob_name_from_gcs_uri(audio_uri)):
+        return {
+            "status": "failed",
+            "detail": f"Invalid audio URL: {audio_gcs_public_url}"
+        }
     try:
-        download_file_from_gcs(get_blob_name_from_gcs_uri(
-            public_url_to_gcs_uri(video_gcs_public_url)), video_path)
-        download_file_from_gcs(get_blob_name_from_gcs_uri(
-            public_url_to_gcs_uri(audio_gcs_public_url)), audio_path)
+        # Download video and audio files from GCS
+        download_file_from_gcs(video_blob, video_path)
+        download_file_from_gcs(audio_blob, audio_path)
     except Exception as e:
         print(f"Failed to download files from GCS: {e}")
         return {"status": "failed", "detail": f"Download failed: {e}"}
