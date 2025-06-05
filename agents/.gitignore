@@ -182,5 +182,5 @@ sessions.db
 # TODO(syu 5/27/2025): Maybe save to GCP Cloud Storage
 generated_images/
 
-generated_audio/
-generated_video/
+generated_audio/*
+generated_video/*
