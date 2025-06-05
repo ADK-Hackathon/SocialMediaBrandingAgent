@@ -22,3 +22,14 @@ def public_url_to_gcs_uri(public_url: str) -> str | None:
         return public_url.replace("https://storage.googleapis.com/", "gs://", 1)
     else:
         return None
+    
+def get_blob_name_from_gcs_uri(gcs_uri: str) -> str | None:
+    """
+    Extracts the blob name from a GCS URI (gs://bucket/object).
+    Returns None if the input is not a valid GCS URI.
+    """
+    if gcs_uri.startswith("gs://"):
+        parts = gcs_uri[5:].split("/", 1)
+        if len(parts) == 2:
+            return parts[1]
+    return None

@@ -1,4 +1,39 @@
+import datetime
+import os
+from agents.utils.gcs_url_converters import public_url_to_gcs_uri, get_blob_name_from_gcs_uri
+from dotenv import load_dotenv
 import moviepy as mp
+from google.genai import Client
+from google.cloud import storage
+
+
+load_dotenv()
+
+client = Client(
+    vertexai=True,
+    project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION"),
+)
+
+# Initialize Google Cloud Storage client
+storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
+GCS_BUCKET_NAME = "smba-assets"  # Public to internet
+
+
+def download_file_from_gcs(source_blob_name: str, destination_file_name: str):
+    """
+    Downloads a file from Google Cloud Storage.
+
+    Args:
+        bucket_name (str): The name of the GCS bucket.
+        source_blob_name (str): The name of the blob in the bucket.
+        destination_file_name (str): The local path where the file will be saved.
+    """
+    bucket = storage_client.bucket(GCS_BUCKET_NAME)
+    blob = bucket.blob(source_blob_name)
+    blob.download_to_filename(destination_file_name)
+    print(
+        f"Downloaded gs://{GCS_BUCKET_NAME}/{source_blob_name} to {destination_file_name}.")
 
 
 def merge_audio_to_video(
@@ -32,6 +67,51 @@ def merge_audio_to_video(
     video_clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
 
 
+def assemble_video_with_audio(video_gcs_uri: str, audio_gcs_uri: str):
+    """
+    Assembles a video with audio from Google Cloud Storage URIs.
+
+    Args:
+        video_gcs_uri (str): GCS URI of the input video file.
+        audio_gcs_uri (str): GCS URI of the input audio file.
+    """
+    # Download files from GCS
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    video_path = f"generated_video/temp_video_{timestamp}.mp4"
+    audio_path = f"generated_audio/temp_audio_{timestamp}.wav"
+
+    try:
+        download_file_from_gcs(get_blob_name_from_gcs_uri(
+            public_url_to_gcs_uri(video_gcs_uri)), video_path)
+        download_file_from_gcs(get_blob_name_from_gcs_uri(
+            public_url_to_gcs_uri(audio_gcs_uri)), audio_path)
+    except Exception as e:
+        print(f"Failed to download files from GCS: {e}")
+        return {"status": "failed", "detail": f"Download failed: {e}"}
+
+    # Merge audio to video
+    output_path = f"generated_video/video_with_audio_{timestamp}.mp4"
+    merge_audio_to_video(video_path, audio_path, output_path)
+
+    # Upload the final video back to GCS
+    try:
+        bucket = storage_client.bucket(GCS_BUCKET_NAME)
+        blob = bucket.blob(f"videos/{os.path.basename(output_path)}")
+        blob.upload_from_filename(output_path, content_type="video/mp4")
+
+        return {
+            "status": "success",
+            "detail": "Video with audio generated and uploaded to GCS",
+            "video_url": blob.public_url,
+        }
+    except IOError as e:
+        print(f"Failed to upload video with audio to GCS: {e}")
+    finally:
+        os.remove(video_path)
+        os.remove(audio_path)
+        os.remove(output_path)
+
+
 if __name__ == "__main__":
     # Example usage
     merge_audio_to_video(
@@ -39,3 +119,8 @@ if __name__ == "__main__":
         audio_path="generated_audio/narration-audio.wav",
         output_path="generated_video/video_with_sound.mp4"
     )
+    status = assemble_video_with_audio(
+        video_gcs_uri="https://storage.googleapis.com/smba-assets/videos/11611916828487350363/sample_0.mp4",
+        audio_gcs_uri="https://storage.googleapis.com/smba-assets/audios/20250604_002905.wav"
+    )
+    print(status)
