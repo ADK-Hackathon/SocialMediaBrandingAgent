@@ -1,5 +1,6 @@
 import datetime
 import os
+import tempfile
 from agents.utils.gcs_url_converters import public_url_to_gcs_uri, get_blob_name_from_gcs_uri
 from dotenv import load_dotenv
 import moviepy as mp
@@ -76,9 +77,10 @@ def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: s
         audio_gcs_public_url (str): GCS public URL of the input audio file.
     """
     # Download files from GCS
+    tmp_dir = tempfile.gettempdir()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    video_path = f"generated_video/temp_video_{timestamp}.mp4"
-    audio_path = f"generated_audio/temp_audio_{timestamp}.wav"
+    video_path = os.path.join(tmp_dir, f"temp_video_{timestamp}.mp4")
+    audio_path = os.path.join(tmp_dir, f"temp_audio_{timestamp}.wav")
 
     try:
         download_file_from_gcs(get_blob_name_from_gcs_uri(
@@ -90,7 +92,7 @@ def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: s
         return {"status": "failed", "detail": f"Download failed: {e}"}
 
     # Merge audio to video
-    output_path = f"generated_video/video_with_audio_{timestamp}.mp4"
+    output_path = os.path.join(tmp_dir, f"video_with_audio_{timestamp}.mp4")
     merge_audio_to_video(video_path, audio_path, output_path)
 
     # Upload the final video back to GCS
