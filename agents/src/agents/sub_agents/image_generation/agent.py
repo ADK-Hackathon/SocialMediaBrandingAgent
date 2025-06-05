@@ -73,6 +73,7 @@ image_generation_agent = Agent(
         "**Crucially, always aim to generate photo-realistic, high-quality images, as if captured by a professional photographer. "
         "Do not include text in the generated image. Focus on visual concepts.** "
         "Once you have the prompt, you must use the `generate_image` tool to create and upload the image. "
+        "Finally you must return the public Google Cloud Storage (GCS) URL of the generated image (which is returned from `generate_image` tool). "
     ),
     output_key="image_generation_output",
     tools=[generate_image],

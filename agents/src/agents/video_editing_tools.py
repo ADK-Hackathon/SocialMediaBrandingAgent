@@ -72,11 +72,14 @@ def merge_audio_to_video(
 
 def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: str):
     """
-    Assembles a video with audio so it has sound. Both video and audio are downloaded from Google Cloud Storage.
+    Assembles a video with an audio so it has sound. Both video and audio should be stored in Google Cloud Storage (GCS).
 
     Args:
         video_gcs_public_url (str): GCS public URL of the input video file.
         audio_gcs_public_url (str): GCS public URL of the input audio file.
+
+    Returns:
+        dict: A dictionary containing the status, detail, and the GCS public URL of the generated video with sound if successful.
     """
     # Download files from GCS
     tmp_dir = tempfile.gettempdir()

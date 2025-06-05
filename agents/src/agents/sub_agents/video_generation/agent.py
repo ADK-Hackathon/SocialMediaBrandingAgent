@@ -21,7 +21,7 @@ client = Client(
 
 # Initialize Google Cloud Storage client
 storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
-GCS_BUCKET_NAME = "smba-assets" # Public to internet
+GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
 def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolContext"):
@@ -89,6 +89,7 @@ video_generation_agent = Agent(
         "Do not include text in the generated video. Focus on visual concepts.** "
         "Once you have the prompt, you must use the prompt with existing image url "
         "and pass them to the `generate_video` tool to create and upload the video. "
+        "Finally you must return the public Google Cloud Storage (GCS) URL of the generated video (which is returned from `generate_video` tool). "
     ),
     output_key="video_generation_output",
     tools=[generate_video],

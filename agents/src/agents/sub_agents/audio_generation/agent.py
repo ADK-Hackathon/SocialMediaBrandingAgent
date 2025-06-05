@@ -76,7 +76,15 @@ def text_to_wav(voice_name: str, text: str) -> bytes:
 
 
 def generate_audio(narration_text: str):
-    """Generates an audio narration based on the provided text."""
+    """
+    Generates an narration audio of the provided text.
+
+    Args:
+        narration_text (str): The text to be narrated.
+
+    Returns:
+        dict: A dictionary containing the status, detail, and audio GCS public URL if successful.
+    """
     audio_bytes: bytes = text_to_wav("en-US-Chirp3-HD-Erinome", narration_text)
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -102,10 +110,10 @@ audio_generation_agent = Agent(
     model="gemini-2.0-flash",
     description="An agent that generates audio narrations.",
     instruction=(
-        "You are an expert audio narration generation agent. Your primary task "
-        "is to generate the narration text based on the user's requirement. Once "
-        "your have the narration text, you must use the `generate_audio` tool to "
-        "generate the audio narration. "
+        "You are an expert audio narration generation agent. Your only tasks are: "
+        "1. Generate the narration text based on the user's requirement. The text must be 8 seconds to 20 seconds long when reading in normal speech speed. "
+        "2. After having the narration text, you must use the `generate_audio` tool to generate the audio narration. "
+        "3. Return back the public Google Cloud Storage (GCS) URL of the generated audio file. "
     ),
     output_key="audio_generation_output",
     tools=[generate_audio,],

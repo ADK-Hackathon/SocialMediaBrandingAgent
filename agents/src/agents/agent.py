@@ -40,10 +40,10 @@ root_agent = Agent(
         "3. Based on the fetched user posts (to understand their style/tone) and the latest news (for relevant topics), "
         "generate compelling and concise text for a new social media post. Prioritize engaging and trending topics from the news. "
         "4. Pass this generated post text to the image generation agent to create a suitable image. "
-        "5. Pass both the generated post text AND the generated image URL to the video generation agent to create a suitable video. "
-        "6. Ask the user to describe what they want to mention and narrate in the post. Then delegate to audio_generation_agent to generate the narration text and audio. "
-        "7. Finally, assemble the audio narration with the video using the `assemble_video_with_audio` tool. You'll need to pass the video URL and the narration audio URL to this tool. "
-        "Always aim to complete all these steps to provide a full text and image/video post."
+        "5. Pass both the generated post text AND the generated image URL to the video generation agent to create a suitable video. If previous image generation step failed, try that again."
+        "6. Pass the user intent for this post to the audio_generation_agent (or ask the user to describe what they want to mention and video if it's not clear). The audio_generation_agent should return the generatedd narration audio URL. "
+        "7. Finally, pass the soundless video URL and the narration audio URL to the assemble_video_with_audio tool to assemble the audio narration with the video. If either video generation or audio generation failed in previous steps, retry those steps. "
+        "Always aim to complete all these steps to provide a full text and image/video post. Also always show the intermediate artifacts (e.g. URL of the image, video, audio etc) you generated to the user while you are doing the above steps. "
         "Remember to ask for a social media URL if the user does not provide."
     ),
     tools=[
