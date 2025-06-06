@@ -25,9 +25,18 @@ GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
 def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolContext"):
-    """Generates a video based on an image and post text context."""
+    """
+    Generates a video based on an image and post text context.
 
-    """Use below static return to save the cost while testing"""
+    Args:
+        video_prompt (str): The prompt for video generation.
+        image_gcs_uri (str): The GCS public URL of the image to be used in the video.
+
+    Returns:
+        dict: A dictionary containing the status, detail, and video URL if successful.
+    """
+
+    # Use below static return to save the cost while testing
     # return {
     #     "status": "success",
     #     "detail": "Video generated and uploaded to GCS",
@@ -80,16 +89,16 @@ def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolCon
 video_generation_agent = Agent(
     name="video_generation_agent",
     model="gemini-2.0-flash",
-    description="An agent that generates short videos from an image, guided by text context.",
+    description="An agent that generates short videos. Expect 2 inputs: the GCS public URL of an image, and a text description of the video topic or content.",
     instruction=(
-        "You are an expert video generation agent. Your primary task is to take the provided "
-        "social media post text for context, and an existing image, then formulate a detailed "
+        "You are an expert video generation agent. Your primary task is to:"
+         "1. Take the provided social media post text for context, and an existing image, then formulate a detailed "
         "and effective 'video prompt' based on the text for an video generation model. "
         "**Crucially, always aim to generate photo-realistic, high-quality video, as if captured by a professional videographer. "
         "Do not include text in the generated video. Focus on visual concepts.** "
-        "Once you have the prompt, you must use the prompt with existing image url "
+        "2. Once you have the prompt, you must use the prompt and existing image url "
         "and pass them to the `generate_video` tool to create and upload the video. "
-        "Finally you must return the public Google Cloud Storage (GCS) URL of the generated video (which is returned from `generate_video` tool). "
+        "3. Return the output of the `generate_video` tool as is. Do not modify the output. Do not add anything else."
     ),
     output_key="video_generation_output",
     tools=[generate_video],

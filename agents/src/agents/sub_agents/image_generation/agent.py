@@ -24,9 +24,17 @@ GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
 def generate_image(img_prompt: str, tool_context: "ToolContext"):
-    """Generates an image based on the prompt."""
+    """
+    Generates an image based on the prompt.
 
-    """Use below static return to save the cost while testing"""
+    Args:
+        img_prompt (str): The prompt for image generation.
+
+    Returns:
+        dict: A dictionary containing the status, detail, and image URL if successful.
+    """
+
+    # Use below static return to save the cost while testing
     # return {
     #     "status": "success",
     #     "detail": "Image generated and uploaded to GCS",
@@ -42,7 +50,6 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
         return {"status": "failed"}
 
     image_bytes = response.generated_images[0].image.image_bytes
-
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     gcs_object_name = f"images/{timestamp}.png"
@@ -65,15 +72,15 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
 image_generation_agent = Agent(
     name="image_generation_agent",
     model="gemini-2.0-flash",
-    description="An agent that generates images and answers questions about the images.",
+    description="An agent that generates images based on the social media post. Expect 1 input which is the social mdetia post text.",
     instruction=(
-        "You are an expert image generation agent. Your primary task is to take the provided "
-        "social media post text, interpret its core theme, and then formulate a detailed "
-        "and effective image prompt for an image generation model. "
+        "You are an expert image generation agent. Your primary task is: "
+        "1. Take the provided social media post text, interpret its core theme, and then formulate a detailed "
+        "and effective prompt for an image generation model. "
         "**Crucially, always aim to generate photo-realistic, high-quality images, as if captured by a professional photographer. "
         "Do not include text in the generated image. Focus on visual concepts.** "
-        "Once you have the prompt, you must use the `generate_image` tool to create and upload the image. "
-        "Finally you must return the public Google Cloud Storage (GCS) URL of the generated image (which is returned from `generate_image` tool). "
+        "2. Once you have the prompt, you must use the `generate_image` tool to create the image and upload it to GCS. "
+        "3. Return the output of the `generate_image` tool as is. Do not modify the output. Do not add anything else."
     ),
     output_key="image_generation_output",
     tools=[generate_image],
