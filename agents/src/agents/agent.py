@@ -1,5 +1,4 @@
 from google.adk.agents import Agent
-from google.adk.tools import google_search
 from google.adk.tools.agent_tool import AgentTool
 from typing import List, Optional, Dict
 from .sub_agents.image_generation import image_generation_agent
