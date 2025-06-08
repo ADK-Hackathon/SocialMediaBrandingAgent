@@ -20,7 +20,7 @@ export default function BuildBlocks({ base }: BuildBlocksProps) {
         </li>
         <li className="overflow-hidden rounded-xl border border-gray-200">
             <TikTokPostBlock 
-                videoUrl="https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4"
+                videoUrl={base.video_url}
                 contentText="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
                 username="cool_dev"
                 profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"

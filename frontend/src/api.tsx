@@ -1,5 +1,6 @@
 // Configuration
 const API_BASE_URL = "https://socialmediabrandingagent-662824162875.us-west1.run.app";
+// const API_BASE_URL = "http://0.0.0.0:8080";
 
 // Types for the message structure
 interface MessagePart {
@@ -220,3 +221,40 @@ export const extractTextFromResponse = (response: AgentResponse): string | null 
   }
   return null;
 };
+
+
+interface ParsedChatResponse {
+    text?: string;
+    imageUrl?: string;
+    videoUrl?: string;
+}
+
+export function parseChatResponse(responseString: string): ParsedChatResponse {
+    try {
+        console.log('responseString:', responseString);
+
+        const parsed: ParsedChatResponse = {};
+
+        // Regex to find Text content (anything after "Text: " and before "Image: " or "Video: " or end of string)
+        const textMatch = responseString.match(/\*\*text:\*\* "(.*?)"/s);
+        if (textMatch && textMatch[1]) {
+            parsed.text = textMatch[1].trim();
+        }
+
+        // Looks for "URL: " followed by http(s)://... any characters ... .png
+        const imageMatch = responseString.match(/(https?:\/\/[^\s"]+\.png)/i);
+        if (imageMatch && imageMatch[1]) {
+            parsed.imageUrl = imageMatch[1];
+        }
+
+        // Looks for "URL: " followed by http(s)://... any characters ... .mp4
+        const videoMatch = responseString.match(/(https?:\/\/[^\s"]+\.mp4)/i);
+        if (videoMatch && videoMatch[1]) {
+            parsed.videoUrl = videoMatch[1];
+        }
+
+        return parsed;
+    } catch (error) {
+        return null;
+    }
+}

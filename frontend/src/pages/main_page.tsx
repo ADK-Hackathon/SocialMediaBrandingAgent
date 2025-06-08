@@ -26,6 +26,7 @@ export default function MainPage({ userId, sessionId }: MainPageProps) {
             value: "",
             enabled: false,
         },
+        video_url: "",
     }
     const [base, setBase] = useState<Base>(initialBase);
 

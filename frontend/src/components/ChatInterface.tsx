@@ -1,6 +1,8 @@
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { useState, useRef, useEffect } from 'react';
-import { sendMessageToAgentSSE, extractTextFromResponse } from '../api';
+import { sendMessageToAgentSSE, extractTextFromResponse, parseChatResponse } from '../api';
+import type { Base } from '../base';
+import type { Dispatch, SetStateAction } from 'react';
 
 interface Message {
   role: 'user' | 'agent';
@@ -12,9 +14,10 @@ interface Message {
 interface ChatInterfaceProps {
   userId: string;
   sessionId: string;
+  setBase: Dispatch<SetStateAction<Base>>;
 }
 
-export default function ChatInterface({ userId, sessionId }: ChatInterfaceProps) {
+export default function ChatInterface({ userId, sessionId, setBase }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'agent', content: 'Hi! I am your social media branding agent. How can I help you today?', isComplete: true }
   ]);
@@ -82,6 +85,18 @@ export default function ChatInterface({ userId, sessionId }: ChatInterfaceProps)
             const lastMessage = newMessages[newMessages.length - 1];
             if (lastMessage.role === 'agent') {
               lastMessage.isComplete = true;
+
+              const parsedContent = parseChatResponse(lastMessage.content);
+
+              console.log('parsedContent:', parsedContent);
+
+              if (parsedContent.videoUrl) {
+                  // keep getting "Uncaught TypeError: setBase is not a function"
+                  // setBase(prevBase => ({
+                  //     ...prevBase,
+                  //     video_url: parsedContent.videoUrl
+                  // }));
+              }
             }
             return newMessages;
           });

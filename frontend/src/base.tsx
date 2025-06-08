@@ -14,6 +14,7 @@ export type Diff =
 | {fieldName: "audiences"; newAudience: AudienceGroup[]}
 | {fieldName: "guideline"; newGuideline: string}
 | {fieldName: "twitter_post"; newTwitterPost: string}
+| {fieldName: "video_url"; newVideoUrl: string}
 
 // Base interface
 export interface Base {
@@ -21,6 +22,7 @@ export interface Base {
     audiences: EnabledField<AudienceGroup[]>;
     guideline: EnabledField<string>;
     twitter_post: EnabledField<string>;
+    video_url: string;
 }
 
 // Helper method to set if the field is enabled.
