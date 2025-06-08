@@ -108,13 +108,40 @@ export default function ToolBar({ base, setBase }: ToolBarProps) {
 
   return (
     <div className="flex flex-col space-y-1 p-2">
+      {artifact_blocks.map((item) => {
+        const ActionIcon = getActionIcon(item);
+        return (
+          <button 
+            key={item.name}
+            type="button"
+            onClick={() => handleToggleClick(item)}
+            className="group flex items-center justify-between rounded px-1.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:bg-indigo-100 focus:text-indigo-700 w-full text-left"
+          >
+            <span className="flex items-center">
+              {item.isFontAwesome ? (
+                <FontAwesomeIcon icon={item.icon} className="mr-2 size-8 flex-shrink-0 text-gray-400 group-hover:text-indigo-500" aria-hidden="true" />
+              ) : (
+                <item.icon
+                  className="mr-2 size-8 flex-shrink-0 text-gray-400 group-hover:text-indigo-500"
+                  aria-hidden="true"
+                />
+              )}
+              {item.name}
+            </span>
+            <ActionIcon className="size-5 text-indigo-600 group-hover:text-indigo-700" aria-hidden="true" />
+          </button>
+        );
+      })}
+
+      <div className="my-2 h-px bg-gray-200" />
+
       {context_blocks.map((item) => {
         const ActionIcon = getActionIcon(item);
         return (
           <button 
             key={item.name}
-            type="button" 
-            onClick={() => handleToggleClick(item)} 
+            type="button"
+            onClick={() => handleToggleClick(item)}
             className="group flex items-center justify-between rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:bg-indigo-100 focus:text-indigo-700 w-full text-left"
           >
             <span className="flex items-center">
@@ -152,32 +179,6 @@ export default function ToolBar({ base, setBase }: ToolBarProps) {
         );
       })}
 
-      <div className="my-2 h-px bg-gray-200" />
-
-      {artifact_blocks.map((item) => {
-        const ActionIcon = getActionIcon(item);
-        return (
-          <button 
-            key={item.name}
-            type="button"
-            onClick={() => handleToggleClick(item)}
-            className="group flex items-center justify-between rounded px-1.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:bg-indigo-100 focus:text-indigo-700 w-full text-left"
-          >
-            <span className="flex items-center">
-              {item.isFontAwesome ? (
-                <FontAwesomeIcon icon={item.icon} className="mr-2 size-8 flex-shrink-0 text-gray-400 group-hover:text-indigo-500" aria-hidden="true" />
-              ) : (
-                <item.icon
-                  className="mr-2 size-8 flex-shrink-0 text-gray-400 group-hover:text-indigo-500"
-                  aria-hidden="true"
-                />
-              )}
-              {item.name}
-            </span>
-            <ActionIcon className="size-5 text-indigo-600 group-hover:text-indigo-700" aria-hidden="true" />
-          </button>
-        );
-      })}
     </div>
   )
 }
