@@ -10,7 +10,7 @@ from google.genai import Client
 from google.genai.types import GenerateVideosConfig, Image
 from agents.utils.gcs_url_converters import gcs_uri_to_public_url, public_url_to_gcs_uri
 
-
+from . import prompt
 load_dotenv()
 
 client = Client(
@@ -89,17 +89,8 @@ def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolCon
 video_generation_agent = Agent(
     name="video_generation_agent",
     model="gemini-2.0-flash",
-    description="An agent that generates short videos. Expect 2 inputs: the GCS public URL of an image, and a text description of the video topic or content.",
-    instruction=(
-        "You are an expert video generation agent. Your primary task is to:"
-         "1. Take the provided social media post text for context, and an existing image, then formulate a detailed "
-        "and effective 'video prompt' based on the text for an video generation model. "
-        "**Crucially, always aim to generate photo-realistic, high-quality video, as if captured by a professional videographer. "
-        "Do not include text in the generated video. Focus on visual concepts.** "
-        "2. Once you have the prompt, you must use the prompt and existing image url "
-        "and pass them to the `generate_video` tool to create and upload the video. "
-        "3. Return the output of the `generate_video` tool as is. Do not modify the output. Do not add anything else."
-    ),
+    description=prompt.DESCRIPTION,
+    instruction=prompt.INSTRUCTIONS,
     output_key="video_generation_output",
     tools=[generate_video],
 )

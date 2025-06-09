@@ -7,7 +7,7 @@ from google.adk.tools import ToolContext
 from google.cloud import storage
 from google.genai import Client, types
 
-
+from . import prompt
 load_dotenv()
 
 # Only Vertex AI supports image generation for now.
@@ -72,16 +72,8 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
 image_generation_agent = Agent(
     name="image_generation_agent",
     model="gemini-2.0-flash",
-    description="An agent that generates images based on the social media post. Expect 1 input which is the social mdetia post text.",
-    instruction=(
-        "You are an expert image generation agent. Your primary task is: "
-        "1. Take the provided social media post text, interpret its core theme, and then formulate a detailed "
-        "and effective prompt for an image generation model. "
-        "**Crucially, always aim to generate photo-realistic, high-quality images, as if captured by a professional photographer. "
-        "Do not include text in the generated image. Focus on visual concepts.** "
-        "2. Once you have the prompt, you must use the `generate_image` tool to create the image and upload it to GCS. "
-        "3. Return the output of the `generate_image` tool as is. Do not modify the output. Do not add anything else."
-    ),
+    description=prompt.DESCRIPTION,
+    instruction=prompt.INSTRUCTIONS,
     output_key="image_generation_output",
     tools=[generate_image],
 )

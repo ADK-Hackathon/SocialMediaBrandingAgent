@@ -7,7 +7,7 @@ from typing import Sequence
 from google.cloud import storage
 from google.genai import Client
 
-
+from . import prompt
 load_dotenv()
 
 # Only Vertex AI supports image generation for now.
@@ -108,13 +108,8 @@ def generate_audio(narration_text: str):
 audio_generation_agent = Agent(
     name="audio_generation_agent",
     model="gemini-2.0-flash",
-    description="An agent that can generates audio narration. Expect an input description of the narration topic or content.",
-    instruction=(
-        "You are an expert audio narration generation agent. Your only tasks are: "
-        "1. Generate the narration text based on the user's requirement. The text must be 8 seconds to 20 seconds long when reading in normal speech speed. "
-        "2. After having the narration text, you must use the `generate_audio` tool to generate the audio narration. "
-        "3. Return the output of the `generate_audio` tool as is. Do not modify the output. Do not add anything else."
-    ),
+    description=prompt.DESCRIPTION,
+    instruction=prompt.INSTRUCTIONS,
     output_key="audio_generation_output",
     tools=[generate_audio,],
 )
