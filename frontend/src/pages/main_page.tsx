@@ -14,19 +14,58 @@ interface MainPageProps {
 export default function MainPage({ userId, sessionId }: MainPageProps) {
     const initialBase: Base = {
         goal: "",
-        audiences: {
+
+        // Context
+        trends: {
             value: [],
             enabled: false,
         },
+        audiences: {
+            value: [],
+            enabled: true,
+        },
+        styles: {
+            value: [],
+            enabled: false,
+        },
+
+        // Intermediate
         guideline: {
             value: "",
-            enabled: false,
+            enabled: true,
         },
+        image_prompt: {
+            value: "",
+            enabled: true,
+        },
+        video_prompt: {
+            value: "",
+            enabled: true,
+        },
+
+        // Artifacts
         twitter_post: {
             value: "",
-            enabled: false,
+            enabled: true,
         },
-        video_url: "",
+        youtube_post: {
+            value: {
+                video_url: "",
+            },
+            enabled: true,
+        },
+        tiktok_post: {
+            value: {
+                video_url: "",
+            },
+            enabled: true,
+        },
+        instagram_post: {
+            value: {
+                video_url: "",
+            },
+            enabled: true,
+        },
     }
     const [base, setBase] = useState<Base>(initialBase);
 
@@ -66,7 +105,7 @@ export default function MainPage({ userId, sessionId }: MainPageProps) {
             </main>
 
             <aside className="sticky top-8 hidden w-96 h-[70vh] shrink-0 xl:block flex flex-col bg-white rounded-lg shadow-lg overflow-hidden">
-                <ChatInterface userId={userId} sessionId={sessionId} />
+                <ChatInterface userId={userId} sessionId={sessionId} setBase={setBase} />
             </aside>
         </div>
         </div>

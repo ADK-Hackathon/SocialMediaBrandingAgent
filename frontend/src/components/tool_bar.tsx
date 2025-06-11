@@ -17,7 +17,7 @@ import type { Dispatch, SetStateAction } from 'react';
 interface ToggleableItem {
   name: string;
   icon: React.ElementType | any;
-  baseFieldName?: keyof Pick<Base, "audiences" | "guideline" | "twitter_post">;
+  baseFieldName?: keyof Pick<Base, "trends" | "audiences" | "styles" | "guideline" | "image_prompt" | "video_prompt" | "twitter_post" | "youtube_post" | "tiktok_post" | "instagram_post">;
   isFontAwesome?: boolean;
 }
 
@@ -30,6 +30,7 @@ const context_blocks: ToggleableItem[] = [
     {
         name: 'Trends',
         icon: ArrowTrendingUpIcon,
+        baseFieldName: 'trends'
     },
     {
         name: 'Audiences',
@@ -39,6 +40,7 @@ const context_blocks: ToggleableItem[] = [
     {
         name: 'Style',
         icon: SparklesIcon,
+        baseFieldName: 'styles'
     },
 ]
 
@@ -51,10 +53,12 @@ const intermediate_blocks: ToggleableItem[] = [
     {
         name: 'Image Prompt',
         icon: PhotoIcon,
+        baseFieldName: 'image_prompt'
     },
     {
         name: 'Video Prompt',
         icon: VideoCameraIcon,
+        baseFieldName: 'video_prompt'
     },
 ]
 
@@ -68,16 +72,19 @@ const artifact_blocks: ToggleableItem[] = [
     {
         name: 'YouTube',
         icon: faYoutube,
+        baseFieldName: 'youtube_post',
         isFontAwesome: true
     },
     {
         name: 'TikTok',
         icon: faTiktok,
+        baseFieldName: 'tiktok_post',
         isFontAwesome: true
     },
     {
         name: 'Instagram',
         icon: faInstagram,
+        baseFieldName: 'instagram_post',
         isFontAwesome: true
     },
 ]
@@ -115,17 +122,10 @@ export default function ToolBar({ base, setBase }: ToolBarProps) {
             key={item.name}
             type="button"
             onClick={() => handleToggleClick(item)}
-            className="group flex items-center justify-between rounded px-1.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:bg-indigo-100 focus:text-indigo-700 w-full text-left"
+            className="group flex items-center justify-between rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:bg-indigo-100 focus:text-indigo-700 w-full text-left"
           >
             <span className="flex items-center">
-              {item.isFontAwesome ? (
-                <FontAwesomeIcon icon={item.icon} className="mr-2 size-8 flex-shrink-0 text-gray-400 group-hover:text-indigo-500" aria-hidden="true" />
-              ) : (
-                <item.icon
-                  className="mr-2 size-8 flex-shrink-0 text-gray-400 group-hover:text-indigo-500"
-                  aria-hidden="true"
-                />
-              )}
+              <FontAwesomeIcon icon={item.icon} className="size-9 flex-shrink-0 text-gray-400 group-hover:text-indigo-500" aria-hidden="true" />
               {item.name}
             </span>
             <ActionIcon className="size-5 text-indigo-600 group-hover:text-indigo-700" aria-hidden="true" />
