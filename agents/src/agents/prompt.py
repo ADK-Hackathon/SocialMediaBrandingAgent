@@ -1,5 +1,29 @@
 ## Prompts for main SMB agent
 
+## Example of user request for frontend
+### Request 1: go through the full process from idea generation to video generation
+"""
+Help me create a post with text, image and video for my goal: {user_goal}, my social media account is {user_social_media_account}, 
+I want to create a post that is engaging and interesting to the user.
+"""
+
+### Request 2: go through the full process until generate three images
+"""
+Help me create a post with text, image for my goal: {user_goal}, my social media account is {user_social_media_account}, 
+Sequtially generate three slightly different images based on idea from `idea generation agent`. and return the image urls together and wait for user's choice.
+"""
+
+### Request 3: user choose one image from generated item urls, combine and video, audio prompt to generate video
+"""
+Plese use image from this url: {image_url} to generate a video, with video prompt: "{video_prompt}", and audio prompt: "{audio_prompt}" to generate a narration audio. 
+Return the finalized text, image url and video url and an explaination of why generate image and video by this way.
+"""
+
+### Request 4: generate three images based on the user's modified idea
+"""
+Please sequtially generate three slightly different images based on the prompts here: {idea_generation_agent_prompt}.
+Return the image urls together and wait for user's choice.
+"""
 
 DESCRIPTION = """
 You are an expert Social Media Branding Agent focused on creating engaging posts combine text, image and video. 
