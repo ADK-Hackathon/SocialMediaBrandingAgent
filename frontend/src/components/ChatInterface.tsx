@@ -1,8 +1,9 @@
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { useState, useRef, useEffect } from 'react';
-import { sendMessageToAgentSSE, extractTextFromResponse, parseChatResponse } from '../api';
+import { sendMessageToAgentSSE, extractTextFromResponse } from '../api';
 import type { Base } from '../base';
 import type { Dispatch, SetStateAction } from 'react';
+import type { SocialMediaAgentInput, SocialMediaAgentOutput } from '../base';
 
 interface Message {
   role: 'user' | 'agent';
@@ -14,10 +15,11 @@ interface Message {
 interface ChatInterfaceProps {
   userId: string;
   sessionId: string;
+  base: Base;
   setBase: Dispatch<SetStateAction<Base>>;
 }
 
-export default function ChatInterface({ userId, sessionId, setBase }: ChatInterfaceProps) {
+export default function ChatInterface({ userId, sessionId, base, setBase }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'agent', content: 'Hi! I am your social media branding agent. How can I help you today?', isComplete: true }
   ]);
@@ -53,6 +55,7 @@ export default function ChatInterface({ userId, sessionId, setBase }: ChatInterf
     // Send message to agent
     const cleanup = sendMessageToAgentSSE(
       inputMessage,
+      base,      // Use prop
       userId,    // Use prop
       sessionId, // Use prop
       {

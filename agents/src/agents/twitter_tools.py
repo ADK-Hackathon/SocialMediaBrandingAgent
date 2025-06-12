@@ -67,12 +67,12 @@ def get_trends():
 
     return response.text
 
-def get_user_posts(userId: str, cursor: str = ""):
+def get_user_posts(userId: str, cursor: str):
     """Retrieves the current weather report for a specified city.
 
     Args:
         userId (str): The user id that we want to retrieve the posts from.
-        cursor (str): The cursor to paginate through the results. First page is "".
+        cursor (str): The cursor to paginate through the results. Default is "".
 
     Returns:
         tweets object[]: The content of the tweet.

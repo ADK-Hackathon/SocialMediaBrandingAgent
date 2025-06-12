@@ -1,4 +1,6 @@
+import json
 from google.adk.agents import Agent, SequentialAgent
+from google.adk.agents.callback_context import CallbackContext
 from google.adk.tools.agent_tool import AgentTool
 from typing import List, Optional, Dict
 from .sub_agents.image_generation import image_generation_agent
@@ -38,7 +40,7 @@ content_agent = Agent(
     input_schema=SocialMediaAgentInput,
     tools=[
         get_user_posts,
-        fetch_latest_news,
+        # fetch_latest_news,
         advanced_search,
         # AgentTool(agent=image_generation_agent),
         AgentTool(agent=video_generation_agent),
@@ -52,13 +54,20 @@ content_agent = Agent(
 format_agent = Agent(
     name="format_agent",
     model="gemini-2.0-flash",
-    instruction="Format the content to JSON.",
-    output_schema=SocialMediaAgentOutput,
-    disallow_transfer_to_peers=True,
+    instruction=f"Format the content to {json.dumps(SocialMediaAgentOutput.model_json_schema(), indent=2)}",
+    # output_schema=SocialMediaAgentOutput,
+    output_key="formatted_base",
+)
+
+
+response_agent = Agent(
+    name="response_agent",
+    model="gemini-2.0-flash",
+    instruction="Extract the agent_response from the input. Only return the agent_response as plain text.",
 )
 
 root_agent = SequentialAgent(
     name="social_media_branding_agent",
-    sub_agents=[content_agent, format_agent],
+    sub_agents=[content_agent, format_agent, response_agent],
     description="Executes a sequence of content generation and formatting.",
 )

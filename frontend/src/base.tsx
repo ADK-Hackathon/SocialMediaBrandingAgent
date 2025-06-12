@@ -86,10 +86,21 @@ export function setEnabledField(
     return newBase;
 }
 
-// Diff type
-export type Diff = 
-| {fieldName: "goal"; newGoal: string}
-| {fieldName: "audiences"; newAudience: AudienceGroup[]}
-| {fieldName: "guideline"; newGuideline: string}
-| {fieldName: "twitter_post"; newTwitterPost: string}
-| {fieldName: "video_url"; newVideoUrl: string}
+// // Diff type
+// export type Diff = 
+// | {fieldName: "goal"; newGoal: string}
+// | {fieldName: "audiences"; newAudience: AudienceGroup[]}
+// | {fieldName: "guideline"; newGuideline: string}
+// | {fieldName: "twitter_post"; newTwitterPost: string}
+// | {fieldName: "video_url"; newVideoUrl: string}
+
+export interface SocialMediaAgentInput {
+    user_query: string;
+    base: Base;
+}
+
+export interface SocialMediaAgentOutput {
+    agent_response: string;
+    is_updated: boolean;
+    updated_base: Base;
+}
