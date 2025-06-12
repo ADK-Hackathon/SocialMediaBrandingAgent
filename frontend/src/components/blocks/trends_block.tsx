@@ -32,7 +32,7 @@ export default function TrendsBlock() {
                                 >
                                     {t}
                                     {t === trend.selected_trend && (
-                                        <CheckCircleIcon className="ml-1.5 h-4 w-4 text-indidgo-700" />
+                                        <CheckCircleIcon className="ml-1.5 h-4 w-4 text-indigo-700" />
                                     )}
                                 </span>
                             ))}

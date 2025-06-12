@@ -22,14 +22,6 @@ export interface VideoPost {
     video_url: string;
 }
 
-// Diff type
-export type Diff = 
-| {fieldName: "goal"; newGoal: string}
-| {fieldName: "audiences"; newAudience: AudienceGroup[]}
-| {fieldName: "guideline"; newGuideline: string}
-| {fieldName: "twitter_post"; newTwitterPost: string}
-| {fieldName: "video_url"; newVideoUrl: string}
-
 // Base interface
 export interface Base {
     goal: string;
@@ -93,3 +85,11 @@ export function setEnabledField(
     }
     return newBase;
 }
+
+// Diff type
+export type Diff = 
+| {fieldName: "goal"; newGoal: string}
+| {fieldName: "audiences"; newAudience: AudienceGroup[]}
+| {fieldName: "guideline"; newGuideline: string}
+| {fieldName: "twitter_post"; newTwitterPost: string}
+| {fieldName: "video_url"; newVideoUrl: string}

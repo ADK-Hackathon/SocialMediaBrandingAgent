@@ -1,4 +1,4 @@
-from google.adk.agents import Agent
+from google.adk.agents import Agent, SequentialAgent
 from google.adk.tools.agent_tool import AgentTool
 from typing import List, Optional, Dict
 from .sub_agents.image_generation import image_generation_agent
@@ -7,7 +7,7 @@ from .sub_agents.audio_generation import audio_generation_agent
 from .sub_agents.idea_generation import idea_generation_agent
 from .twitter_tools import advanced_search, get_trends, get_user_posts
 from .video_editing_tools import assemble_video_with_audio
-
+from .schemas import SocialMediaAgentInput, SocialMediaAgentOutput
 
 from . import prompt
 
@@ -30,20 +30,35 @@ def fetch_latest_news() -> List[str]:
     ]
 
 
-root_agent = Agent(
-    name="social_media_branding_agent",
+content_agent = Agent(
+    name="social_media_branding_content_agent",
     model="gemini-2.0-flash",
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
+    input_schema=SocialMediaAgentInput,
     tools=[
         get_user_posts,
         fetch_latest_news,
         advanced_search,
-        AgentTool(agent=image_generation_agent),
+        # AgentTool(agent=image_generation_agent),
         AgentTool(agent=video_generation_agent),
         AgentTool(agent=audio_generation_agent),
-        AgentTool(agent=idea_generation_agent),
+        # AgentTool(agent=idea_generation_agent),
         get_trends,
         assemble_video_with_audio,
     ]
+)
+
+format_agent = Agent(
+    name="format_agent",
+    model="gemini-2.0-flash",
+    instruction="Format the content to JSON.",
+    output_schema=SocialMediaAgentOutput,
+    disallow_transfer_to_peers=True,
+)
+
+root_agent = SequentialAgent(
+    name="social_media_branding_agent",
+    sub_agents=[content_agent, format_agent],
+    description="Executes a sequence of content generation and formatting.",
 )

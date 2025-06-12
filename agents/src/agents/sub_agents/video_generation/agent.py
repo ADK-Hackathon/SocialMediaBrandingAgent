@@ -16,7 +16,7 @@ load_dotenv()
 client = Client(
     vertexai=True,
     project=os.getenv("GOOGLE_CLOUD_PROJECT"),
-    location=os.getenv("GOOGLE_CLOUD_LOCATION"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
 )
 
 # Initialize Google Cloud Storage client
@@ -24,7 +24,7 @@ storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
 GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
-def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolContext"):
+def generate_video(video_prompt: str, tool_context: "ToolContext"):
     """
     Generates a video based on an image and post text context.
 
@@ -50,10 +50,10 @@ def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolCon
             # model="veo-3.0-generate-preview",  # hope we can use this asap
             model="veo-2.0-generate-001",
             prompt=video_prompt,
-            image=Image(
-                gcs_uri=public_url_to_gcs_uri(image_gcs_uri),
-                mime_type="image/png",
-            ),
+            # image=Image(
+            #     gcs_uri=public_url_to_gcs_uri(image_gcs_uri),
+            #     mime_type="image/png",
+            # ),
             config=GenerateVideosConfig(
                 aspect_ratio="16:9",
                 output_gcs_uri=output_gcs_uri,
@@ -71,7 +71,7 @@ def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolCon
             print(f"DEBUG: operation.result: {operation.result}")
 
             generated_video_uri = operation.result.generated_videos[0].video.uri
-
+            print(f"DEBUG: Generated video URI: {generated_video_uri}")
             return {
                 "status": "success",
                 "detail": "Video generated and uploaded to GCS",
@@ -83,6 +83,7 @@ def generate_video(video_prompt: str, image_gcs_uri: str, tool_context: "ToolCon
                 "detail": f"Video generation failed: {operation}",
             }
     except Exception as e:
+        print(f"DEBUG: Video generation failed: {e}")
         return {"status": "failed", "detail": f"Video generation failed: {e}"}
 
 
