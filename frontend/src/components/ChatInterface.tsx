@@ -1,12 +1,11 @@
-import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { PaperAirplaneIcon, ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useState, useRef, useEffect } from 'react';
 import { sendMessageToAgentSSE, extractTextFromResponse } from '../api';
 import type { Base } from '../base';
 import type { Dispatch, SetStateAction } from 'react';
-import type { SocialMediaAgentInput, SocialMediaAgentOutput } from '../base';
 
 interface Message {
-  role: 'user' | 'agent';
+  role: 'user' | 'reasoning' | 'agent';
   content: string;
   isComplete?: boolean;
 }
@@ -23,6 +22,7 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
   const [messages, setMessages] = useState<Message[]>([
     { role: 'agent', content: 'Hi! I am your social media branding agent. How can I help you today?', isComplete: true }
   ]);
+  const [reasoningCollapsed, setReasoningCollapsed] = useState<Record<number, boolean>>({});
   const lastChunkId = useRef<string | null>(null);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -45,9 +45,9 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
     const userMessage: Message = { role: 'user' as const, content: inputMessage, isComplete: true };
     setMessages(prev => [...prev, userMessage]);
     
-    // Create placeholder for agent's response
-    const agentPlaceholder: Message = { role: 'agent' as const, content: '', isComplete: false };
-    setMessages(prev => [...prev, agentPlaceholder]);
+    // Create placeholder for agent's reasoning
+    const reasoningPlaceholder: Message = { role: 'reasoning' as const, content: '', isComplete: false };
+    setMessages(prev => [...prev, reasoningPlaceholder]);
     
     setInputMessage('');
     setIsLoading(true);
@@ -61,16 +61,36 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
       {
         onData: (response) => {
           const text = extractTextFromResponse(response);
+          const author = response.author;
           const chunkId = response.id;
-          if (text) {
+
+          if (!text || lastChunkId.current === chunkId) return;
+          lastChunkId.current = chunkId;
+
+          if (author === "social_media_branding_content_agent") {
             setMessages(prev => {
-              const newMessages = [...prev];
-              const lastMessage = newMessages[newMessages.length - 1];
-              if (lastMessage.role === 'agent' && !lastMessage.isComplete && lastChunkId.current !== chunkId) {
-                lastChunkId.current = chunkId;
-                lastMessage.content += text;
+              const lastMessage = prev[prev.length - 1];
+              if (lastMessage?.role === 'reasoning' && !lastMessage.isComplete) {
+                const updatedLastMessage = { ...lastMessage, content: lastMessage.content + text };
+                return [...prev.slice(0, -1), updatedLastMessage];
               }
-              return newMessages;
+              return prev;
+            });
+          } else if (author === "response_agent") {
+            setMessages(prev => {
+              const lastMessage = prev[prev.length - 1];
+
+              if (lastMessage?.role === 'reasoning' && !lastMessage.isComplete) {
+                const updatedReasoningMessage = { ...lastMessage, isComplete: true };
+                const newAgentMessage: Message = { role: 'agent', content: text, isComplete: false };
+                
+                return [...prev.slice(0, -1), updatedReasoningMessage, newAgentMessage];
+              } else if (lastMessage?.role === 'agent' && !lastMessage.isComplete) {
+                const updatedAgentMessage = { ...lastMessage, content: lastMessage.content + text };
+                return [...prev.slice(0, -1), updatedAgentMessage];
+              }
+              
+              return prev;
             });
           }
         },
@@ -88,18 +108,6 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
             const lastMessage = newMessages[newMessages.length - 1];
             if (lastMessage.role === 'agent') {
               lastMessage.isComplete = true;
-
-              const parsedContent = parseChatResponse(lastMessage.content);
-
-              console.log('parsedContent:', parsedContent);
-
-              if (parsedContent.videoUrl) {
-                  // keep getting "Uncaught TypeError: setBase is not a function"
-                  // setBase(prevBase => ({
-                  //     ...prevBase,
-                  //     video_url: parsedContent.videoUrl
-                  // }));
-              }
             }
             return newMessages;
           });
@@ -116,25 +124,60 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
     <div className="flex h-full flex-col">
       {/* Conversation History */}
       <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-gray-50">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
+        {messages.map((message, index) => {
+          if (message.role === 'reasoning') {
+            const isCollapsed = reasoningCollapsed[index] ?? false;
+            return (
+              <div key={index} className="w-full my-2 text-gray-500">
+                <button
+                  onClick={() =>
+                    setReasoningCollapsed((prev) => ({
+                      ...prev,
+                      [index]: !isCollapsed,
+                    }))
+                  }
+                  className="flex items-center text-sm font-medium hover:text-gray-700"
+                >
+                  {isCollapsed ? (
+                    <ChevronRightIcon className="h-4 w-4 mr-1" />
+                  ) : (
+                    <ChevronDownIcon className="h-4 w-4 mr-1" />
+                  )}
+                  <span>Agent Reasoning</span>
+                </button>
+                {!isCollapsed && (
+                  <div className="mt-1 p-2 text-sm text-gray-600 border-l-2 border-gray-200 ml-2 pl-2 whitespace-pre-wrap">
+                    {message.content}
+                    {!message.isComplete && (
+                      <span className="inline-block animate-pulse">▋</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          }
+          return (
             <div
-              className={`rounded-lg p-3 text-sm max-w-[80%] ${
-                message.role === 'user'
-                  ? 'bg-indigo-500 text-white'
-                  : 'bg-gray-200 text-gray-900'
+              key={index}
+              className={`flex ${
+                message.role === 'user' ? 'justify-end' : 'justify-start'
               }`}
             >
-              {message.content}
-              {!message.isComplete && (
-                <span className="inline-block animate-pulse">▋</span>
-              )}
+              <div
+                className={`rounded-lg p-3 text-sm max-w-[80%] ${
+                  message.role === 'user'
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-gray-200 text-gray-900'
+                }`}
+              >
+                {message.content}
+                {!message.isComplete && (
+                  <span className="inline-block animate-pulse">▋</span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
 

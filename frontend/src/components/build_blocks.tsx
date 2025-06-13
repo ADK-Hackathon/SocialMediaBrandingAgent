@@ -10,12 +10,14 @@ import TrendsBlock from "./blocks/trends_block";
 import StylesBlock from "./blocks/styles_block";
 import ImagePromptBlock from "./blocks/image_prompt_block";
 import VideoPromptBlock from "./blocks/video_prompt_block";
+import type { Dispatch, SetStateAction } from 'react';
 
 interface BuildBlocksProps {
   base: Base;
+  setBase: Dispatch<SetStateAction<Base>>;
 }
 
-export default function BuildBlocks({ base }: BuildBlocksProps) {
+export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
   return (
     <ul role="list" className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-2 xl:gap-x-8">
         <li className="col-span-full">
@@ -64,7 +66,7 @@ export default function BuildBlocks({ base }: BuildBlocksProps) {
             <div className="mt-2 h-px bg-gray-200" />
         </li>
         <li className="overflow-hidden rounded-xl border border-gray-200">
-            <GoalBlock />
+            <GoalBlock base={base} setBase={setBase} />
         </li>
         {base.audiences.enabled && (
           <li className="overflow-hidden rounded-xl border border-gray-200">

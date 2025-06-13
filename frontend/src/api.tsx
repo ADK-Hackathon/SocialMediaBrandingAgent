@@ -1,3 +1,5 @@
+import type { Base, SocialMediaAgentInput } from "./base";
+
 // Configuration
 const API_BASE_URL = "https://socialmediabrandingagent-662824162875.us-west1.run.app";
 // const API_BASE_URL = "http://0.0.0.0:8080";
@@ -61,17 +63,23 @@ interface SSECallbacks {
 // Main function to send message and handle SSE response
 export const sendMessageToAgentSSE = (
   message: string,
+  base: Base,
   user_id: string,
   session_id: string,
   callbacks: SSECallbacks
 ) => {
+  const socialMediaAgentInput: SocialMediaAgentInput = {
+    user_query: message,
+    base: base
+  };
+  console.log('socialMediaAgentInput:', socialMediaAgentInput);
   const payload: AgentRequestPayload = {
     appName: "agents",
     userId: user_id,
     sessionId: session_id,
     newMessage: {
       role: "user",
-      parts: [{ text: message }]
+      parts: [{ text: JSON.stringify(socialMediaAgentInput) }]
     },
     streaming: true
   };

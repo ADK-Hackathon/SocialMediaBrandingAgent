@@ -13,7 +13,7 @@ interface MainPageProps {
 
 export default function MainPage({ userId, sessionId }: MainPageProps) {
     const initialBase: Base = {
-        goal: "",
+        goal: "I want to create a social media campaign for my company.",
 
         // Context
         trends: {
@@ -101,11 +101,11 @@ export default function MainPage({ userId, sessionId }: MainPageProps) {
             </aside>
 
             <main className="flex-1">
-                <BuildBlocks base={base} />
+                <BuildBlocks base={base} setBase={setBase} />
             </main>
 
             <aside className="sticky top-8 hidden w-96 h-[70vh] shrink-0 xl:block flex flex-col bg-white rounded-lg shadow-lg overflow-hidden">
-                <ChatInterface userId={userId} sessionId={sessionId} setBase={setBase} />
+                <ChatInterface userId={userId} sessionId={sessionId} base={base} setBase={setBase} />
             </aside>
         </div>
         </div>
