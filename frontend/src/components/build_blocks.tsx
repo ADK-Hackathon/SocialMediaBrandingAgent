@@ -53,7 +53,7 @@ export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
         { base.instagram_post.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
             <InstagramPostBlock
-                mediaUrl="https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4"
+                mediaUrl={base.instagram_post.value.video_url}
                 contentText="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
                 username="cool_dev"
                 profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"
@@ -90,17 +90,17 @@ export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
         </li>)}
         { base.guideline.enabled && (
           <li className="overflow-hidden rounded-xl border border-gray-200">
-              <GuidelineBlock />
+              <GuidelineBlock prompt={base.guideline.value} />
           </li>
         )}
         { base.image_prompt.enabled && (
           <li className="overflow-hidden rounded-xl border border-gray-200">
-              <ImagePromptBlock />
+              <ImagePromptBlock prompt={base.image_prompt.value} />
           </li>
         )}
         { base.video_prompt.enabled && (
           <li className="overflow-hidden rounded-xl border border-gray-200">
-              <VideoPromptBlock />
+              <VideoPromptBlock prompt={base.video_prompt.value} />
           </li>
         )}
     </ul>

@@ -1,6 +1,7 @@
 import { FaInstagram, FaRegHeart, FaRegComment, FaRegPaperPlane, FaRegBookmark } from "react-icons/fa6";
 import { BsThreeDots } from "react-icons/bs";
 import BaseBlock from './base_block';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 
 interface InstagramBlockProps {
@@ -46,13 +47,19 @@ export default function InstagramBlock({
 
                         {/* Video/Image Content */}
                         <div className="w-full aspect-square bg-black flex items-center justify-center">
-                            <video
-                                className="w-full h-full object-cover"
-                                src={mediaUrl}
-                                controls
-                                autoPlay
-                                loop
-                            />
+                            {mediaUrl ? (
+                                <video
+                                    className="w-full h-full object-cover"
+                                    src={mediaUrl}
+                                    controls
+                                    autoPlay
+                                    loop
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <ArrowPathIcon className="h-12 w-12 text-gray-500 animate-spin" />
+                                </div>
+                            )}
                         </div>
 
                         {/* Post Actions */}

@@ -35,7 +35,7 @@ export default function TwitterPostBlock({
             content={
                 <div className="px-3 py-3">
                     <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-3 ]">
                             {/* Profile Picture */}
                             <img
                                 src={profilePicUrl}
@@ -53,9 +53,17 @@ export default function TwitterPostBlock({
                                 </div>
 
                                 {/* Tweet Content Text */}
-                                <p className="mt-1 text-gray-800 text-sm">
-                                    {contentText}
-                                </p>
+                                {contentText === "" ? (
+                                    <div className="flex space-x-1 mt-2 min-h-10">
+                                        <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse [animation-delay:-0.3s]"></span>
+                                        <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse [animation-delay:-0.15s]"></span>
+                                        <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse"></span>
+                                    </div>
+                                ) : (
+                                    <p className="mt-1 text-gray-800 text-sm">
+                                        {contentText}
+                                    </p>
+                                )}
 
                                 {/* Optional Media */}
                                 {mediaUrl && (

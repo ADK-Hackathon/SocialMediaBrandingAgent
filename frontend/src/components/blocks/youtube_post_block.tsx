@@ -1,6 +1,7 @@
 import { FaYoutube } from "react-icons/fa6";
 import { BsDot } from "react-icons/bs";
 import BaseBlock from './base_block';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 
 interface YouTubeBlockProps {
@@ -37,14 +38,20 @@ export default function YouTubePostBlock({
             content={
                 <div className="px-3 py-3">
                     <div className="bg-white border border-gray-200 overflow-hidden shadow-sm">
-                        <div className="relative w-full aspect-video bg-gray-900">
-                            <video
-                                className="w-full h-full object-cover"
-                                src={videoUrl}
-                                controls
-                                autoPlay
-                                loop
-                            />
+                        <div className="relative w-full aspect-video bg-gray-900 flex items-center justify-center">
+                            {videoUrl ? (
+                                <video
+                                    className="w-full h-full object-cover"
+                                    src={videoUrl}
+                                    controls
+                                    autoPlay
+                                    loop
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <ArrowPathIcon className="h-12 w-12 text-gray-500 animate-spin" />
+                                </div>
+                            )}
                         </div>
 
                         <div className="p-3 flex space-x-3">
