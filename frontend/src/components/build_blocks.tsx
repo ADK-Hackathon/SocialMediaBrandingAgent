@@ -27,8 +27,7 @@ export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
         { base.twitter_post.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
             <TwitterPostBlock
-                mediaUrl="https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4"
-                contentText="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
+                contentText={base.twitter_post.value}
                 username="cool_dev"
                 profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"
             />
@@ -36,7 +35,7 @@ export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
         { base.youtube_post.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
             <YouTubePostBlock
-                videoUrl="https://storage.cloud.google.com/smba-assets/videos/8905612651172803034/sample_0.mp4"
+                videoUrl={base.youtube_post.value.video_url}
                 thumbnailUrl="https://randomuser.me/api/portraits/men/32.jpg"
                 videoTitle="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
                 channelName="cool_dev"

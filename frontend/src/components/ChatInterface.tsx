@@ -1,11 +1,13 @@
 import { PaperAirplaneIcon, ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useState, useRef, useEffect } from 'react';
 import { sendMessageToAgentSSE, extractTextFromResponse } from '../api';
-import type { Base } from '../base';
+import type { Base, SocialMediaAgentOutput } from '../base';
 import type { Dispatch, SetStateAction } from 'react';
 
 interface Message {
-  role: 'user' | 'reasoning' | 'agent';
+  // Role determines how the message is rendered.
+  // `base_content` is not rendered as a chat bubble but as a "Restore" button.
+  role: 'user' | 'reasoning' | 'base_content' | 'agent';
   content: string;
   isComplete?: boolean;
 }
@@ -76,15 +78,42 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
               }
               return prev;
             });
-          } else if (author === "response_agent") {
+          } else if (author === "format_agent") {
             setMessages(prev => {
               const lastMessage = prev[prev.length - 1];
 
               if (lastMessage?.role === 'reasoning' && !lastMessage.isComplete) {
                 const updatedReasoningMessage = { ...lastMessage, isComplete: true };
-                const newAgentMessage: Message = { role: 'agent', content: text, isComplete: false };
+                const newAgentMessage: Message = { role: 'base_content', content: text, isComplete: false };
                 
                 return [...prev.slice(0, -1), updatedReasoningMessage, newAgentMessage];
+              } else if (lastMessage?.role === 'base_content' && !lastMessage.isComplete) {
+                const updatedAgentMessage = { ...lastMessage, content: lastMessage.content + text };
+                return [...prev.slice(0, -1), updatedAgentMessage];
+              }
+              
+              return prev;
+            });
+          } else if (author === "response_agent") {
+            // If last message is base_content, we can automatically set the base to the updated base.
+            if (messages[messages.length - 1].role === 'base_content') {
+              const jsonString = messages[messages.length - 1].content
+                .replace(/^```json/, "")
+                .replace(/```$/, "");
+              const agent_output: SocialMediaAgentOutput = JSON.parse(jsonString);
+              if (agent_output.is_updated) {
+                console.log("Setting base to: ", agent_output.updated_base);
+                setBase(agent_output.updated_base);
+              }
+            }
+            setMessages(prev => {
+              const lastMessage = prev[prev.length - 1];
+
+              if (lastMessage?.role === 'base_content' && !lastMessage.isComplete) {
+                const updatedBaseContentMessage = { ...lastMessage, isComplete: true };
+                const newAgentMessage: Message = { role: 'agent', content: text, isComplete: false };
+                
+                return [...prev.slice(0, -1), updatedBaseContentMessage, newAgentMessage];
               } else if (lastMessage?.role === 'agent' && !lastMessage.isComplete) {
                 const updatedAgentMessage = { ...lastMessage, content: lastMessage.content + text };
                 return [...prev.slice(0, -1), updatedAgentMessage];
@@ -92,7 +121,7 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
               
               return prev;
             });
-          }
+          } 
         },
         onError: (error) => {
           console.error('Error from agent:', error);
@@ -153,6 +182,32 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
                     )}
                   </div>
                 )}
+              </div>
+            );
+          }
+          if (message.role === 'base_content') {
+            if (!message.isComplete) return null; // Don't render while streaming
+            return (
+              <div key={index} className="w-full my-2 flex justify-start">
+                <button
+                  onClick={() => {
+                    try {
+                      const jsonString = message.content
+                        .replace(/^```json/, "")
+                        .replace(/```$/, "");
+                      const agent_output: SocialMediaAgentOutput = JSON.parse(jsonString);
+                      if (agent_output.is_updated) {
+                        console.log("Setting base to: ", agent_output.updated_base);
+                        setBase(agent_output.updated_base);
+                      }
+                    } catch (e) {
+                      console.error("Failed to parse and set base from checkpoint", e);
+                    }
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 text-sm font-medium"
+                >
+                  Restore Checkpoint
+                </button>
               </div>
             );
           }
