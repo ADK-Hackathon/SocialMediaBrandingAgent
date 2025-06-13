@@ -6,6 +6,7 @@ import google.cloud.texttospeech as tts
 from typing import Sequence
 from google.cloud import storage
 from google.genai import Client
+from typing import Literal
 
 from . import prompt
 load_dotenv()
@@ -75,17 +76,33 @@ def text_to_wav(voice_name: str, text: str) -> bytes:
     return response.audio_content
 
 
-def generate_audio(narration_text: str):
+def generate_audio(
+    narration_text: str,
+    gender: Literal["male", "female"] = "female",
+    language: Literal["en", "es"] = "en",
+) -> dict:
     """
-    Generates an narration audio of the provided text.
+    Generates an narration audio of the provided text with specified voice gender.
 
     Args:
         narration_text (str): The text to be narrated.
+        gender (Literal["male", "female"]): The voice gender for the narration (default is "female").
+        language (Literal["en", "es"]): The language for the narration (default is "en").
 
     Returns:
         dict: A dictionary containing the status, detail, and audio GCS public URL if successful.
     """
-    audio_bytes: bytes = text_to_wav("en-US-Chirp3-HD-Erinome", narration_text)
+
+    if gender == "female" and language == "en":
+        voice_name = "en-US-Chirp3-HD-Erinome"
+    elif gender == "male" and language == "en":
+        voice_name = "en-US-Chirp3-HD-Algenib"
+    elif gender == "female" and language == "es":
+        voice_name = "es-US-Chirp3-HD-Erinome"
+    else:
+        voice_name = "es-US-Chirp3-HD-Algenib"
+
+    audio_bytes: bytes = text_to_wav(voice_name, narration_text)
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     gcs_object_name = f"audios/{timestamp}.wav"
@@ -116,7 +133,10 @@ audio_generation_agent = Agent(
 
 if __name__ == "__main__":
     # This is for testing pruposes only.
-    # list_languages()
-    # list_voices("en-US")
-    text_to_wav("en-US-Chirp3-HD-Erinome",
-                "Looking for a new strategic challenge?")
+    list_languages()
+    list_voices("es-US")
+    # text_to_wav("en-US-Chirp3-HD-Erinome",
+    #             "Looking for a new strategic challenge?")
+    result = generate_audio(
+        "Looking for a new strategic challenge?", "female", "en")
+    print(result)
