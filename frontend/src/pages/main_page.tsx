@@ -17,7 +17,10 @@ export default function MainPage({ userId, sessionId }: MainPageProps) {
 
         // Context
         trends: {
-            value: [],
+            value: {
+                selected_trend: "",
+                trending: []
+            },
             enabled: false,
         },
         audiences: {
