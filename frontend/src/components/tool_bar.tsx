@@ -114,7 +114,7 @@ export default function ToolBar({ base, setBase }: ToolBarProps) {
   };
 
   return (
-    <div className="flex flex-col space-y-1 p-2">
+    <div className="flex flex-col space-y-1">
       {artifact_blocks.map((item) => {
         const ActionIcon = getActionIcon(item);
         return (

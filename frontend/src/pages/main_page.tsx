@@ -66,10 +66,6 @@ export default function MainPage() {
         </header>
 
         <div className="mx-auto flex flex-1 w-full max-w-7xl items-start gap-x-8 py-10 sm:px-2 lg:px-4">
-            {/* <aside className="sticky top-8 hidden w-44 shrink-0 lg:block">
-                <ToolBar base={base} setBase={setBase} />
-            </aside> */}
-
             <main className="flex-1">
                 {/* View Toggle and Toolbar Dropdown */}
                 <div className="mb-8 flex items-start justify-start">
@@ -113,7 +109,7 @@ export default function MainPage() {
 
                             {/* Dropdown Menu */}
                             {isToolbarOpen && (
-                                <div className="absolute top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                <div className="absolute top-full mt-2 w-60 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                                     <div className="p-4">
                                         <ToolBar base={base} setBase={setBase} />
                                     </div>
