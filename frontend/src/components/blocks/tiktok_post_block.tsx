@@ -51,15 +51,15 @@ export default function TikTokBlock({
                         {/* Overlay: User Info and Actions */}
                         <div className="absolute bottom-5 left-4 text-white">
                             {/* Username */}
-                            <p className="text-sm font-semibold">{username}</p>
+                            {/* <p className="text-sm font-semibold">{username}</p> */}
 
                             {/* Post Caption */}
-                            <p className="text-xs">{contentText}</p>
+                            {/* <p className="text-xs">{contentText}</p> */}
 
                             {/* Music Info */}
-                            <p className="text-xs flex items-center mt-1">
+                            {/* <p className="text-xs flex items-center mt-1">
                                 <BsMusicNoteBeamed className="mr-1" /> {musicTitle}
-                            </p>
+                            </p> */}
                         </div>
 
                         {/* Right-Side Action Buttons */}

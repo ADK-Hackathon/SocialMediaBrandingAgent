@@ -26,6 +26,7 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
   ]);
   const [reasoningCollapsed, setReasoningCollapsed] = useState<Record<number, boolean>>({});
   const lastChunkId = useRef<string | null>(null);
+  const formattedBaseContent = useRef('');
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -53,6 +54,7 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
     
     setInputMessage('');
     setIsLoading(true);
+    formattedBaseContent.current = ''; // Reset for new message
 
     // Send message to agent
     const cleanup = sendMessageToAgentSSE(
@@ -79,33 +81,40 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
               return prev;
             });
           } else if (author === "format_agent") {
+            // The format_agent streams the final JSON state.
+            // We accumulate it in the 'base_content' message.
+            formattedBaseContent.current += text;
             setMessages(prev => {
               const lastMessage = prev[prev.length - 1];
 
               if (lastMessage?.role === 'reasoning' && !lastMessage.isComplete) {
                 const updatedReasoningMessage = { ...lastMessage, isComplete: true };
-                const newAgentMessage: Message = { role: 'base_content', content: text, isComplete: false };
-                
-                return [...prev.slice(0, -1), updatedReasoningMessage, newAgentMessage];
+                const newBaseContentMessage: Message = { role: 'base_content', content: text, isComplete: false };
+                return [...prev.slice(0, -1), updatedReasoningMessage, newBaseContentMessage];
+
               } else if (lastMessage?.role === 'base_content' && !lastMessage.isComplete) {
-                const updatedAgentMessage = { ...lastMessage, content: lastMessage.content + text };
-                return [...prev.slice(0, -1), updatedAgentMessage];
+                const updatedBaseContentMessage = { ...lastMessage, content: lastMessage.content + text };
+                return [...prev.slice(0, -1), updatedBaseContentMessage];
               }
               
               return prev;
             });
           } else if (author === "response_agent") {
-            // If last message is base_content, we can automatically set the base to the updated base.
-            if (messages[messages.length - 1].role === 'base_content') {
-              const jsonString = messages[messages.length - 1].content
-                .replace(/^```json/, "")
-                .replace(/```$/, "");
-              const agent_output: SocialMediaAgentOutput = JSON.parse(jsonString);
-              if (agent_output.is_updated) {
-                console.log("Setting base to: ", agent_output.updated_base);
-                setBase(agent_output.updated_base);
+            if (formattedBaseContent.current) {
+              const jsonString = formattedBaseContent.current.replace(/^```json/, "").replace(/```$/, "");
+              try {
+                const agent_output: SocialMediaAgentOutput = JSON.parse(jsonString);
+                if (agent_output.is_updated) {
+                  console.log("Setting base to: ", agent_output.updated_base);
+                  setBase(agent_output.updated_base);
+                }
+              } catch (e) {
+                console.error("Failed to parse base_content from format_agent", e);
               }
+              // Reset for the next response in the same session.
+              formattedBaseContent.current = '';
             }
+
             setMessages(prev => {
               const lastMessage = prev[prev.length - 1];
 

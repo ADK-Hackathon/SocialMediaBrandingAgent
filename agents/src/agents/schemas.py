@@ -34,7 +34,7 @@ class Base(BaseModel):
     goal: str = Field(description="The goal of the content. For example, 'Promote a new SaaS product.'")
 
     # ── 2. Context ────────────────────────────────────────
-    trends: EnabledField[List[Trend]]
+    trends: EnabledField[Trend]
     audiences: EnabledField[List[AudienceGroup]]
     styles: EnabledField[List[Style]]
 

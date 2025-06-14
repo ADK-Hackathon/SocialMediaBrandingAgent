@@ -1,16 +1,30 @@
 import { ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
 import BaseBlock from './base_block';
-import type { Trend } from '../../base';
+import type { Base } from '../../base';
+import type { Dispatch, SetStateAction } from 'react';
 
 
-const trend: Trend = {
-    selected_trend: "AI",
-    trending: ["AI", "Wine & Fruits Fair", "WWDC2025"],
+interface TrendsBlockProps {
+    base: Base;
+    setBase: Dispatch<SetStateAction<Base>>;
 }
 
+export default function TrendsBlock({ base, setBase }: TrendsBlockProps) {
 
-export default function TrendsBlock() {
+    const trends = base.trends?.value || {
+        selected_trend: "",
+        trending: []
+    };
+
+    const trendingTopics = trends.trending || [];
+
+    const handleTrendSelect = (trend: string) => {
+        if (trend !== trends.selected_trend) {
+            const updatedTrends = { ...base.trends, value: { ...trends, selected_trend: trend } };
+            setBase({ ...base, trends: updatedTrends });
+        }
+    };
 
     return (
         <BaseBlock
@@ -21,17 +35,18 @@ export default function TrendsBlock() {
                     <div>
                         <h3 className="text-xs font-medium text-gray-500 mb-2">Trending Topics:</h3>
                         <div className="flex flex-wrap gap-2">
-                            {trend.trending.map(t => (
+                            {trendingTopics.map(t => (
                                 <span
                                     key={t}
-                                    className={`inline-flex items-center rounded-full py-0.5 px-2.5 text-xs font-medium ring-1 ring-inset ${
-                                        t === trend.selected_trend
+                                    onClick={() => handleTrendSelect(t)}
+                                    className={`inline-flex items-center rounded-full py-0.5 px-2.5 text-xs font-medium ring-1 ring-inset cursor-pointer ${
+                                        t === trends.selected_trend
                                             ? 'bg-indigo-100 text-indigo-700 ring-indigo-600/20'
                                             : 'bg-gray-100 text-gray-600 ring-gray-500/10'
                                     }`}
                                 >
                                     {t}
-                                    {t === trend.selected_trend && (
+                                    {t === trends.selected_trend && (
                                         <CheckCircleIcon className="ml-1.5 h-4 w-4 text-indigo-700" />
                                     )}
                                 </span>

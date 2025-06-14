@@ -27,7 +27,7 @@ export interface Base {
     goal: string;
 
     // Context
-    trends: EnabledField<Trend[]>;
+    trends: EnabledField<Trend>;
     audiences: EnabledField<AudienceGroup[]>;
     styles: EnabledField<Style[]>;
 

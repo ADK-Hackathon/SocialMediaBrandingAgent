@@ -74,7 +74,7 @@ export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
         )}
         {base.trends.enabled && (
           <li className="overflow-hidden rounded-xl border border-gray-200">
-              <TrendsBlock />
+              <TrendsBlock base={base} setBase={setBase} />
           </li>
         )}
         {base.styles.enabled && (
