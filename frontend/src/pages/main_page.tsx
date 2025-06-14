@@ -6,21 +6,15 @@ import type { Base } from '../base'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-// Define props interface
-interface MainPageProps {
-  userId: string;
-  sessionId: string;
-}
-
-export default function MainPage({ userId, sessionId }: MainPageProps) {
+export default function MainPage() {
     const location = useLocation();
     const navigate = useNavigate();
     
-    // Get initial base from location state, or redirect to landing if not available
-    const initialBase: Base = location.state?.initialBase;
+    // Get initial base, userId, and sessionId from location state
+    const { initialBase, userId, sessionId } = location.state || {};
     
-    if (!initialBase) {
-        // If no initial base is provided, redirect to landing page
+    if (!initialBase || !userId || !sessionId) {
+        // If required data is not provided, redirect to landing page
         navigate('/');
         return null;
     }

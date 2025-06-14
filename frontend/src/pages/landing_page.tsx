@@ -1,74 +1,113 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Base } from '../base';
+import { startNewSession } from '../api';
 
 const LandingPage = () => {
   const [goal, setGoal] = useState('');
+  const [userId, _] = useState<string>("u_123"); // TODO: Replace with actual user ID retrieval logic
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
   const navigate = useNavigate();
 
+  // Initialize session in the background when component mounts
+  useEffect(() => {
+    const initializeSession = async () => {
+      if (userId) {
+        try {
+          console.log(`Initializing session for user: ${userId}`);
+          const newSessionId = await startNewSession(userId);
+          setSessionId(newSessionId);
+          console.log(`Session started with ID: ${newSessionId}`);
+        } catch (err) {
+          console.error("Failed to start new session:", err);
+          setError(err instanceof Error ? err.message : String(err));
+        } finally {
+          setIsInitializing(false);
+        }
+      }
+    };
+
+    initializeSession();
+  }, [userId]);
+
   const handleSubmit = () => {
-    if (goal.trim()) {
-      const initialBase: Base = {
-        goal: goal.trim(),
-
-        // Context
-        trends: {
-          value: {
-            selected_trend: "",
-            trending: []
-          },
-          enabled: false,
-        },
-        audiences: {
-          value: [],
-          enabled: true,
-        },
-        styles: {
-          value: [],
-          enabled: false,
-        },
-
-        // Intermediate
-        guideline: {
-          value: "",
-          enabled: true,
-        },
-        image_prompt: {
-          value: "",
-          enabled: true,
-        },
-        video_prompt: {
-          value: "",
-          enabled: true,
-        },
-
-        // Artifacts
-        twitter_post: {
-          value: "",
-          enabled: true,
-        },
-        youtube_post: {
-          value: {
-            video_url: "",
-          },
-          enabled: true,
-        },
-        tiktok_post: {
-          value: {
-            video_url: "",
-          },
-          enabled: true,
-        },
-        instagram_post: {
-          value: {
-            video_url: "",
-          },
-          enabled: true,
-        },
-      };
-
-      navigate('/main', { state: { initialBase } });
+    if (!goal.trim()) {
+      return;
     }
+
+    // Check if session is available
+    if (error) {
+      alert(`Error initializing session: ${error}. Please refresh the page and try again.`);
+      return;
+    }
+
+    if (!sessionId) {
+      alert('Session is still initializing. Please wait a moment and try again.');
+      return;
+    }
+
+    const initialBase: Base = {
+      goal: goal.trim(),
+
+      // Context
+      trends: {
+        value: {
+          selected_trend: "",
+          trending: []
+        },
+        enabled: true,
+      },
+      audiences: {
+        value: [],
+        enabled: true,
+      },
+      styles: {
+        value: [],
+        enabled: true,
+      },
+
+      // Intermediate
+      guideline: {
+        value: "",
+        enabled: true,
+      },
+      image_prompt: {
+        value: "",
+        enabled: true,
+      },
+      video_prompt: {
+        value: "",
+        enabled: true,
+      },
+
+      // Artifacts
+      twitter_post: {
+        value: "",
+        enabled: true,
+      },
+      youtube_post: {
+        value: {
+          video_url: "",
+        },
+        enabled: true,
+      },
+      tiktok_post: {
+        value: {
+          video_url: "",
+        },
+        enabled: true,
+      },
+      instagram_post: {
+        value: {
+          video_url: "",
+        },
+        enabled: true,
+      },
+    };
+
+    navigate('/main', { state: { initialBase, userId, sessionId } });
   };
 
   return (
@@ -125,6 +164,26 @@ const LandingPage = () => {
           <p className="text-xl text-gray-600 mb-10">
             Enter your goal and let our AI create the perfect branding for you.
           </p>
+          
+          {/* Show session status */}
+          {isInitializing && (
+            <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-blue-700 text-sm">Initializing session...</p>
+            </div>
+          )}
+          
+          {error && (
+            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700 text-sm">Session error: {error}</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="mt-2 text-red-600 underline text-sm hover:text-red-800"
+              >
+                Refresh page to retry
+              </button>
+            </div>
+          )}
+          
           <div className="flex w-full max-w-lg mx-auto">
             <input
               type="text"
@@ -135,10 +194,15 @@ const LandingPage = () => {
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
             <button
-              className="p-4 text-base font-medium rounded-r-lg bg-indigo-600 text-white cursor-pointer transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className={`p-4 text-base font-medium rounded-r-lg text-white cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                isInitializing || error 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-indigo-600 hover:bg-indigo-700'
+              }`}
               onClick={handleSubmit}
+              disabled={isInitializing || !!error}
             >
-              Get Started
+              {isInitializing ? 'Initializing...' : 'Get Started'}
             </button>
           </div>
         </div>
