@@ -3,6 +3,15 @@ import { useState, useRef, useEffect } from 'react';
 import { sendMessageToAgentSSE, extractTextFromResponse } from '../api';
 import type { Base, SocialMediaAgentOutput } from '../base';
 import type { Dispatch, SetStateAction } from 'react';
+import ReactMarkdown, { type Components } from 'react-markdown';
+
+const markdownComponents: Components = {
+  a: ({children, ...props}: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a {...props} className="text-blue-500 underline">
+      {children}
+    </a>
+  ),
+};
 
 interface Message {
   // Role determines how the message is rendered.
@@ -185,7 +194,7 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
                 </button>
                 {!isCollapsed && (
                   <div className="mt-1 p-2 text-sm text-gray-600 border-l-2 border-gray-200 ml-2 pl-2 whitespace-pre-wrap">
-                    {message.content}
+                    <ReactMarkdown components={markdownComponents}>{message.content}</ReactMarkdown>
                     {!message.isComplete && (
                       <span className="inline-block animate-pulse">▋</span>
                     )}
@@ -234,7 +243,7 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
                     : 'bg-gray-200 text-gray-900'
                 }`}
               >
-                {message.content}
+                <ReactMarkdown components={markdownComponents}>{message.content}</ReactMarkdown>
                 {!message.isComplete && (
                   <span className="inline-block animate-pulse">▋</span>
                 )}
