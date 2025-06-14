@@ -1,15 +1,11 @@
 import { FaHeart, FaCommentDots, FaShare, FaTiktok } from "react-icons/fa6";
-import { BsMusicNoteBeamed } from "react-icons/bs";
 import BaseBlock from './base_block';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 
 interface TikTokBlockProps {
     videoUrl: string;
-    contentText: string;
-    username?: string;
     profilePicUrl?: string;
-    musicTitle?: string;
     likes?: number;
     comments?: number;
     shares?: number;
@@ -18,10 +14,7 @@ interface TikTokBlockProps {
 
 export default function TikTokBlock({
     videoUrl,
-    contentText,
-    username = "@username",
     profilePicUrl = "https://randomuser.me/api/portraits/men/32.jpg",
-    musicTitle = "Original Sound",
     likes = 1245,
     comments = 237,
     shares = 98,
