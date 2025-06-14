@@ -69,7 +69,7 @@ export default function BuildBlocks({ base, setBase }: BuildBlocksProps) {
         </li>
         {base.audiences.enabled && (
           <li className="overflow-hidden rounded-xl border border-gray-200">
-              <AudienceBlock />
+              <AudienceBlock base={base} setBase={setBase} />
           </li>
         )}
         {base.trends.enabled && (
