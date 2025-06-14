@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { Base } from '../base';
 
 const LandingPage = () => {
   const [goal, setGoal] = useState('');
@@ -7,7 +8,66 @@ const LandingPage = () => {
 
   const handleSubmit = () => {
     if (goal.trim()) {
-      navigate('/main');
+      const initialBase: Base = {
+        goal: goal.trim(),
+
+        // Context
+        trends: {
+          value: {
+            selected_trend: "",
+            trending: []
+          },
+          enabled: false,
+        },
+        audiences: {
+          value: [],
+          enabled: true,
+        },
+        styles: {
+          value: [],
+          enabled: false,
+        },
+
+        // Intermediate
+        guideline: {
+          value: "",
+          enabled: true,
+        },
+        image_prompt: {
+          value: "",
+          enabled: true,
+        },
+        video_prompt: {
+          value: "",
+          enabled: true,
+        },
+
+        // Artifacts
+        twitter_post: {
+          value: "",
+          enabled: true,
+        },
+        youtube_post: {
+          value: {
+            video_url: "",
+          },
+          enabled: true,
+        },
+        tiktok_post: {
+          value: {
+            video_url: "",
+          },
+          enabled: true,
+        },
+        instagram_post: {
+          value: {
+            video_url: "",
+          },
+          enabled: true,
+        },
+      };
+
+      navigate('/main', { state: { initialBase } });
     }
   };
 

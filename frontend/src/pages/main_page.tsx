@@ -4,6 +4,7 @@ import BuildBlocks from '../components/build_blocks'
 import ChatInterface from '../components/ChatInterface'
 import type { Base } from '../base'
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 // Define props interface
 interface MainPageProps {
@@ -12,64 +13,18 @@ interface MainPageProps {
 }
 
 export default function MainPage({ userId, sessionId }: MainPageProps) {
-    const initialBase: Base = {
-        goal: "I want to create a social media campaign for my company.",
-
-        // Context
-        trends: {
-            value: {
-                selected_trend: "",
-                trending: []
-            },
-            enabled: false,
-        },
-        audiences: {
-            value: [],
-            enabled: true,
-        },
-        styles: {
-            value: [],
-            enabled: false,
-        },
-
-        // Intermediate
-        guideline: {
-            value: "",
-            enabled: true,
-        },
-        image_prompt: {
-            value: "",
-            enabled: true,
-        },
-        video_prompt: {
-            value: "",
-            enabled: true,
-        },
-
-        // Artifacts
-        twitter_post: {
-            value: "",
-            enabled: true,
-        },
-        youtube_post: {
-            value: {
-                video_url: "",
-            },
-            enabled: true,
-        },
-        tiktok_post: {
-            value: {
-                video_url: "",
-            },
-            enabled: true,
-        },
-        instagram_post: {
-            value: {
-                video_url: "",
-            },
-            enabled: true,
-        },
+    const location = useLocation();
+    const navigate = useNavigate();
+    
+    // Get initial base from location state, or redirect to landing if not available
+    const initialBase: Base = location.state?.initialBase;
+    
+    if (!initialBase) {
+        // If no initial base is provided, redirect to landing page
+        navigate('/');
+        return null;
     }
+    
     const [base, setBase] = useState<Base>(initialBase);
 
     return (
