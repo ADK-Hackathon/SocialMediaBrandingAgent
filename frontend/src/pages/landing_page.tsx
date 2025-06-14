@@ -107,7 +107,7 @@ const LandingPage = () => {
       },
     };
 
-    navigate('/main', { state: { initialBase, userId, sessionId } });
+    navigate('/main', { state: { initialBase, userId, sessionId, shouldStartGeneration: true } });
   };
 
   return (

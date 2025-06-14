@@ -11,8 +11,8 @@ export default function MainPage() {
     const location = useLocation();
     const navigate = useNavigate();
     
-    // Get initial base, userId, and sessionId from location state
-    const { initialBase, userId, sessionId } = location.state || {};
+    // Get initial base, userId, sessionId, and shouldStartGeneration from location state
+    const { initialBase, userId, sessionId, shouldStartGeneration } = location.state || {};
     
     if (!initialBase || !userId || !sessionId) {
         // If required data is not provided, redirect to landing page
@@ -130,7 +130,7 @@ export default function MainPage() {
             </main>
 
             <aside className="sticky top-8 hidden w-96 h-[70vh] shrink-0 xl:block flex flex-col bg-white rounded-lg shadow-lg overflow-hidden">
-                <ChatInterface userId={userId} sessionId={sessionId} base={base} setBase={setBase} />
+                <ChatInterface userId={userId} sessionId={sessionId} base={base} setBase={setBase} shouldStartGeneration={shouldStartGeneration} />
             </aside>
         </div>
         </div>

@@ -27,18 +27,18 @@ interface ChatInterfaceProps {
   sessionId: string;
   base: Base;
   setBase: Dispatch<SetStateAction<Base>>;
+  shouldStartGeneration?: boolean;
 }
 
-export default function ChatInterface({ userId, sessionId, base, setBase }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'agent', content: 'Hi! I am your social media branding agent. How can I help you today?', isComplete: true }
-  ]);
+export default function ChatInterface({ userId, sessionId, base, setBase, shouldStartGeneration }: ChatInterfaceProps) {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [reasoningCollapsed, setReasoningCollapsed] = useState<Record<number, boolean>>({});
   const lastChunkId = useRef<string | null>(null);
   const formattedBaseContent = useRef('');
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hasStartedGeneration = useRef(false);
 
   // Scroll to bottom whenever messages change
   const scrollToBottom = () => {
@@ -49,25 +49,39 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputMessage.trim() || isLoading) return;
+  // Trigger generation when shouldStartGeneration is true
+  useEffect(() => {
+    if (shouldStartGeneration && !hasStartedGeneration.current) {
+      const startGeneration = async () => {
+        try {
+          await sendMessage("Start the generation.");
+        } catch (error) {
+          console.error("Failed to start generation:", error);
+        }
+      };
+      
+      startGeneration();
+      hasStartedGeneration.current = true;
+    }
+  }, [shouldStartGeneration]);
+
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim() || isLoading) return;
 
     // Add user message
-    const userMessage: Message = { role: 'user' as const, content: inputMessage, isComplete: true };
+    const userMessage: Message = { role: 'user' as const, content: messageText, isComplete: true };
     setMessages(prev => [...prev, userMessage]);
     
     // Create placeholder for agent's reasoning
     const reasoningPlaceholder: Message = { role: 'reasoning' as const, content: '', isComplete: false };
     setMessages(prev => [...prev, reasoningPlaceholder]);
     
-    setInputMessage('');
     setIsLoading(true);
     formattedBaseContent.current = ''; // Reset for new message
 
     // Send message to agent
     const cleanup = sendMessageToAgentSSE(
-      inputMessage,
+      messageText,
       base,      // Use prop
       userId,    // Use prop
       sessionId, // Use prop
@@ -165,6 +179,14 @@ export default function ChatInterface({ userId, sessionId, base, setBase }: Chat
 
     // Cleanup on component unmount
     return cleanup;
+  };
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputMessage.trim() || isLoading) return;
+
+    await sendMessage(inputMessage);
+    setInputMessage('');
   };
 
   return (
