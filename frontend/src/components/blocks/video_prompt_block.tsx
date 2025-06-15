@@ -1,5 +1,6 @@
 import { VideoCameraIcon } from '@heroicons/react/24/outline'
 import BaseBlock from './base_block';
+import ReactMarkdown from 'react-markdown';
 
 
 interface VideoPromptBlockProps {
@@ -24,7 +25,7 @@ export default function VideoPromptBlock({ prompt }: VideoPromptBlockProps) {
                                         <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse"></span>
                                     </div>
                                 ) : (
-                                    <p> {prompt} </p>
+                                    <p> <ReactMarkdown>{prompt}</ReactMarkdown> </p>
                                 )}
                         </div>
                     </div>
