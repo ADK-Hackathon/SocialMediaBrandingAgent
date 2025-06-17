@@ -26,13 +26,15 @@ storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
 GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
-def generate_video(video_prompt: str, image_gcs_uri: str = ""):
+def generate_video(video_prompt: str, image_gcs_uri: str):
     """
-    Generates a video based on an image and post text context.
+    Generates a soundless video based on an prompt text and optionally an image.
+
+    If you don't have an image, simply set the image_gcs_uri to empty string.
 
     Args:
         video_prompt (str): The prompt for video generation.
-        image_gcs_uri (str): Optional. The GCS public URL of the image to be used in the video. If empty, the video will be generated purely based on the prompt.
+        image_gcs_uri (str): The GCS public URL of the image to be used in the video. If empty, the video will be generated purely based on the prompt.
 
     Returns:
         dict: A dictionary containing the status, detail, and video URL if successful.
@@ -65,7 +67,7 @@ def generate_video(video_prompt: str, image_gcs_uri: str = ""):
         # Poll the operation status until done
         print("DEBUG: Video generation started. Polling for completion...")
         while not operation.done:
-            time.sleep(15)
+            time.sleep(1)
             operation = client.operations.get(operation)
             print(f"DEBUG: operation: {operation}")
 

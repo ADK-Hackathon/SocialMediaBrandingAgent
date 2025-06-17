@@ -78,16 +78,16 @@ def text_to_wav(voice_name: str, text: str) -> bytes:
 
 def generate_audio(
     narration_text: str,
-    gender: Literal["male", "female"] = "female",
-    language: Literal["en", "es"] = "en",
+    gender: Literal["male", "female"],
+    language: Literal["en", "es"],
 ) -> dict:
     """
-    Generates an narration audio of the provided text with specified voice gender.
+    Generates an narration audio of the provided text with specified voice gender and text language.
 
     Args:
         narration_text (str): The text to be narrated.
-        gender (Literal["male", "female"]): The voice gender for the narration (default is "female").
-        language (Literal["en", "es"]): The language for the narration (default is "en").
+        gender (Literal["male", "female"]): The voice gender for the narration.
+        language (Literal["en", "es"]): The language for the narration.
 
     Returns:
         dict: A dictionary containing the status, detail, and audio GCS public URL if successful.

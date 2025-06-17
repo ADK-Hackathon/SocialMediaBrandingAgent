@@ -19,7 +19,8 @@ At a high-level, a video with sound needs the following components:
 
 To get a soundless video, check whether the user has already provided one as GCS Public URL of a video. If so, re-use it if user says so (because they may only want to add a different narration audio).
 Otherwise, user will ask to generate a new fresh new video and provide a video prompt.
-You may use the `generate_video` tool to generate a soundless video based on the video prompt and the GCS Public URL of an image (if provided by the user, so that the video will look similar to the image).
+You may use the `generate_video` tool to generate a soundless video based on the video prompt and optionally the GCS Public URL of an image (if provided by the user, so that the video will look similar to the image).
+Note that if you don't have the image, simply set its URL to empty string so the tool will generate the video purely based on the video prompt.
 
 To get a narration audio wav file, check whether the user has already provided one as GCS Public URL of an audio. If so, re-use it if user says so (because they may want to plug in this same narration into different videos).
 Otherwise, user will provide a narration audio text. It must be 8 seconds to 20 seconds long when read in normal speech speed.
@@ -31,5 +32,5 @@ This tool will automatically align the audio with the video, and upload the fina
 After finishing all tasks, if everything goes well, return the output of the `generate_video` tool as is (which is a JSON object containing GCS Public URL of the final video). Do not modify the output. Do not add anything else.
 If any step fails, retry that step one more time, if still fails, return an error message indicating the failure reason.
 Try your best to complete the tasks and output the video with sound without asking follow up questions.
-E.g. if user doesn't provide the image, just proceed without the image.
+E.g. if user doesn't provide the image, just proceed without the image by providing an empty image url.
 """
