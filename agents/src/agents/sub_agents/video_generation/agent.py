@@ -9,6 +9,8 @@ from google.cloud import storage
 from google.genai import Client
 from google.genai.types import GenerateVideosConfig, Image
 from agents.utils.gcs_url_converters import gcs_uri_to_public_url, public_url_to_gcs_uri
+from agents.sub_agents.audio_generation.agent import generate_audio
+from agents.video_editing_tools import assemble_video_with_audio
 
 from . import prompt
 load_dotenv()
@@ -24,13 +26,13 @@ storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
 GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
-def generate_video(video_prompt: str, tool_context: "ToolContext"):
+def generate_video(video_prompt: str, image_gcs_uri: str = ""):
     """
     Generates a video based on an image and post text context.
 
     Args:
         video_prompt (str): The prompt for video generation.
-        image_gcs_uri (str): The GCS public URL of the image to be used in the video.
+        image_gcs_uri (str): Optional. The GCS public URL of the image to be used in the video. If empty, the video will be generated purely based on the prompt.
 
     Returns:
         dict: A dictionary containing the status, detail, and video URL if successful.
@@ -50,10 +52,10 @@ def generate_video(video_prompt: str, tool_context: "ToolContext"):
             # model="veo-3.0-generate-preview",  # hope we can use this asap
             model="veo-2.0-generate-001",
             prompt=video_prompt,
-            # image=Image(
-            #     gcs_uri=public_url_to_gcs_uri(image_gcs_uri),
-            #     mime_type="image/png",
-            # ),
+            image=Image(
+                gcs_uri=public_url_to_gcs_uri(image_gcs_uri),
+                mime_type="image/png",
+            ) if image_gcs_uri else None,
             config=GenerateVideosConfig(
                 aspect_ratio="16:9",
                 output_gcs_uri=output_gcs_uri,
@@ -93,5 +95,5 @@ video_generation_agent = Agent(
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
     output_key="video_generation_output",
-    tools=[generate_video],
+    tools=[generate_video, generate_audio, assemble_video_with_audio],
 )

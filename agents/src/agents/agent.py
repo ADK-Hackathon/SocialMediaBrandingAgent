@@ -42,12 +42,12 @@ content_agent = Agent(
         get_user_posts,
         # fetch_latest_news,
         advanced_search,
-        # AgentTool(agent=image_generation_agent),
+        AgentTool(agent=image_generation_agent),
         AgentTool(agent=video_generation_agent),
-        AgentTool(agent=audio_generation_agent),
+        # AgentTool(agent=audio_generation_agent),
         # AgentTool(agent=idea_generation_agent),
         get_trends,
-        assemble_video_with_audio,
+        # assemble_video_with_audio,
     ]
 )
 
