@@ -1,3 +1,8 @@
+import logging
+
+# ——— Enable ADK debug ———
+# logging.basicConfig(level=logging.DEBUG)
+
 import os
 
 import uvicorn
