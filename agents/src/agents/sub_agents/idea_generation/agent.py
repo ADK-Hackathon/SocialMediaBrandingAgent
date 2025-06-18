@@ -8,7 +8,7 @@ from . import prompt
 
 idea_generation_agent = Agent(
     name="idea_generation_agent",
-    model="gemini-2.0-flash-exp",
+    model="gemini-2.5-flash-exp",
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
     output_key="idea_generation_output",

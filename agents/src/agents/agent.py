@@ -34,7 +34,7 @@ def fetch_latest_news() -> List[str]:
 
 content_agent = Agent(
     name="social_media_branding_content_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
     input_schema=SocialMediaAgentInput,
@@ -53,7 +53,7 @@ content_agent = Agent(
 
 format_agent = Agent(
     name="format_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     instruction=f"Format the content to {json.dumps(SocialMediaAgentOutput.model_json_schema(), indent=2)}",
     # output_schema=SocialMediaAgentOutput,
     output_key="formatted_base",
@@ -62,7 +62,7 @@ format_agent = Agent(
 
 response_agent = Agent(
     name="response_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     instruction="Extract the agent_response from the input. Only return the agent_response as plain text.",
 )
 

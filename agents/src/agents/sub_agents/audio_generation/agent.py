@@ -124,7 +124,7 @@ def generate_audio(
 
 audio_generation_agent = Agent(
     name="audio_generation_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
     output_key="audio_generation_output",
