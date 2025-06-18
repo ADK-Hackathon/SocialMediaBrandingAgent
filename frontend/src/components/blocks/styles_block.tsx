@@ -16,6 +16,22 @@ export default function StylesBlock({ base, setBase }: StyleBlockProps) {
     const selectedStyles = styles.filter(style => style.selected);
     const notSelectedStyles = styles.filter(style => !style.selected);
 
+    const toggleStyleSelection = (styleName: string) => {
+        const updatedStyles = styles.map(style => 
+            style.name === styleName 
+                ? { ...style, selected: !style.selected }
+                : style
+        );
+
+        setBase(prevBase => ({
+            ...prevBase,
+            styles: {
+                ...prevBase.styles,
+                value: updatedStyles
+            }
+        }));
+    };
+
     return (
         <BaseBlock
             icon={SparklesIcon}
@@ -34,6 +50,7 @@ export default function StylesBlock({ base, setBase }: StyleBlockProps) {
                                     <button
                                         type="button"
                                         className="ml-1.5 inline-flex flex-shrink-0 rounded-full p-0.5 text-indigo-700 hover:bg-indigo-200 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 focus:ring-offset-indigo-100"
+                                        onClick={() => toggleStyleSelection(style.name)}
                                     >
                                         <span className="sr-only">Remove {style.name}</span>
                                         <XMarkIcon className="h-3 w-3" aria-hidden="true" />
@@ -57,6 +74,7 @@ export default function StylesBlock({ base, setBase }: StyleBlockProps) {
                                     <button
                                         type="button"
                                         className="ml-1.5 inline-flex flex-shrink-0 rounded-full p-0.5 text-gray-700 hover:bg-gray-200 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-100"
+                                        onClick={() => toggleStyleSelection(style.name)}
                                     >
                                         <span className="sr-only">Add {style.name}</span>
                                         <PlusIcon className="h-3 w-3" aria-hidden="true" />
