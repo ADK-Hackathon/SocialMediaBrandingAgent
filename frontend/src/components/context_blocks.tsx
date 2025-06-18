@@ -31,7 +31,7 @@ export default function ContextBlocks({ base, setBase }: ContextBlocksProps) {
       )}
       {base.styles.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
-          <StylesBlock />
+          <StylesBlock base={base} setBase={setBase} />
         </li>
       )}
 

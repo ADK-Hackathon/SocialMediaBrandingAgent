@@ -24,7 +24,7 @@ export default function ImagePromptBlock({ prompt }: ImagePromptBlockProps) {
                                         <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse"></span>
                                     </div>
                                 ) : (
-                                    <p> <ReactMarkdown>{prompt}</ReactMarkdown> </p>
+                                    <ReactMarkdown>{prompt}</ReactMarkdown>
                                 )}
                         </div>
                     </div>
