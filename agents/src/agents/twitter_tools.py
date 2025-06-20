@@ -65,7 +65,7 @@ def get_trends():
 
     print(response.text)
 
-    return response.text
+    return response.text ## only return the top 10 trends
 
 def get_user_posts(userId: str, cursor: str):
     """Retrieves the current weather report for a specified city.

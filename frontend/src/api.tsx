@@ -1,8 +1,8 @@
 import type { Base, SocialMediaAgentInput } from "./base";
 
 // Configuration
-const API_BASE_URL = "https://socialmediabrandingagent-662824162875.us-west1.run.app";
-// const API_BASE_URL = "http://0.0.0.0:8080";
+// const API_BASE_URL = "https://socialmediabrandingagent-662824162875.us-west1.run.app";
+const API_BASE_URL = "http://0.0.0.0:8080";
 
 // Types for the message structure
 interface MessagePart {

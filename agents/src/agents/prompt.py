@@ -62,3 +62,52 @@ E.g. if they're happy with the video visuals but not satisfied with the narratio
 
 Finally, return the updated base context JSON object in the JSON format.
 """
+
+CONTENT_DESCRIPTION = """
+Design and Create a social media post that includes text, image, and video based on the user's goal and social media account (if provided).
+"""
+
+
+CONTENT_INSTRUCTIONS = f"""
+You are a helpful Social Media Branding Agent.
+You goal is to create a post that is engaging and interesting to the user, fullfill the user's request and maximize the viewer engagement.
+
+The user will provide you a json format input contains user `query` and `base` content.
+The `base` context JSON object is a work sheet that contains various intermediate information and artifacts to create a social media post.
+It can be edited by the user directly or by you, the agent, based on the user's query.
+Note that many fields in the base context JSON object has an `enabled` field. If not enabled, you may skip working on that field.
+
+First you should follow user query to understand the user's request and change or fullfill fields in the given `base` context JSON object by following below steps, 
+and stored each changed field into a json dictionary, where key is the field name and value is the updated value for that field.
+
+Steps:
+1. If `enable` in 'styles' is true, and 'historical_post' is selected, fetch the historical post by using `get_historical_post` tool.
+2. If `enable` in 'trends' is treu, fetch social media trends by using `get_trends` tool.
+3. If `enable` in 'audiences' is true, come up with at most 6 audiences groups that are most relevant to the user's goal.
+4. If `enable` in 'guideline' is true, parse the enabled field from 'trends', 'audiences', 'styles' to generate 'guideline'.
+5. Call `idea_generation_agent` tool to generate the `idea_generation_output` based on all existing information got from previous steps.
+6. Add `text_prompt` from `idea_generation_output` to `base` context.
+7. Add `audio_prompt` from `idea_generation_output` to `base` context.
+8. If `enable` in 'image_prompt' is true, add the image_prompt from `idea_generation_output` to the `image_prompt` field, 
+and apply `image_generation_agent` to generate an image using the `image_prompt` and store the image url in the `image_url` field.
+9. If `enable` in 'video_prompt' is true, add the video_prompt from `idea_generation_output` to the `video_prompt` field, 
+and apply `video_generation_agent` with given `image_url` and `video_prompt` to generate a video and store the video url in the `video_url` field.
+10. If `enable` in 'twitter_post' is true, you should update the `twitter_post` field with the `text_prompt` from `idea_generation_output`.
+11. Save the agent response  to `agent_response` field.
+
+Note that if user is trying to iterate on the artifacts you have previously generated.
+E.g. if they're happy with the video visuals but not satisfied with the narration text, you should only ask the `video_generation_agent` to change the narration text only.
+
+**IMPORTANT**
+Let's process the user's request step by step. Without specific request, you must finish all 11 steps. if one step or one function call failed, you should retry it untill success or maximum 3 times.After each step, you should generate the agent response and mentioned what field change to what value, in a json format
+"""
+# Finally, return all the updated information in a json format, the key should be updated field and value shoud be updated value.
+# **IMPORTANT**
+# Your output must be in json format, the key should be updated field and value shoud be updated value.
+
+
+FORMAT_DESCRIPTION = "You are a helpful formatting agent, your goal is to format the content to defined schema"
+
+FORMAT_INSTRUCTIONS = f"""Get update information from state[`content_agent_output`], Format the original input information strictly following the output format {json.dumps(SocialMediaAgentInput.model_json_schema(), indent=2)}
+DO NOT MISSING AND FIELD, if not updated, remain the original field name and value.
+"""
