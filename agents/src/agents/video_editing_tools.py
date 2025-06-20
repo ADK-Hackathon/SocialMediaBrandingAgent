@@ -34,9 +34,11 @@ def download_file_from_gcs(source_blob_name: str, destination_file_name: str):
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
     print(
-        f"Downloaded gs://{GCS_BUCKET_NAME}/{source_blob_name} to {destination_file_name}.")
+        f"DEBUG: Downloaded gs://{GCS_BUCKET_NAME}/{source_blob_name} to {destination_file_name}.")
 
 
+# TODO: this function causes warning "UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown".
+# It's confirmed it happens when creating new clips from existing clips. Probably need to close the clips after edit.
 def merge_audio_to_video(
     video_path: str, audio_path: str, output_path: str
 ):
@@ -81,6 +83,7 @@ def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: s
     Returns:
         dict: A dictionary containing the status, detail, and the GCS public URL of the generated video with sound if successful.
     """
+    print("DEBUG: Start assembling video with audio...")
     # Download files from GCS
     tmp_dir = tempfile.gettempdir()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -119,6 +122,7 @@ def assemble_video_with_audio(video_gcs_public_url: str, audio_gcs_public_url: s
         blob = bucket.blob(f"videos/{os.path.basename(output_path)}")
         blob.upload_from_filename(output_path, content_type="video/mp4")
 
+        print(f"DEBUG: assemble_video_with_audio returnning successful")
         return {
             "status": "success",
             "detail": "Video with audio generated and uploaded to GCS",

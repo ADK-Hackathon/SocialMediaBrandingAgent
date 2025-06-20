@@ -71,7 +71,7 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
 
 image_generation_agent = Agent(
     name="image_generation_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
     output_key="image_generation_output",

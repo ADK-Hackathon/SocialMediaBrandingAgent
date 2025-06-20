@@ -66,15 +66,23 @@ def generate_video(video_prompt: str, image_gcs_uri: str):
 
         # Poll the operation status until done
         print("DEBUG: Video generation started. Polling for completion...")
+        wait_seconds = 0
         while not operation.done:
             time.sleep(1)
+            wait_seconds += 1
             operation = client.operations.get(operation)
-            print(f"DEBUG: operation: {operation}")
+            print(f"DEBUG: waited {wait_seconds} seconds for operation: {operation}")
 
-        if operation.response:
+        if operation.response and operation.result:
             print(f"DEBUG: operation.result: {operation.result}")
 
-            generated_video_uri = operation.result.generated_videos[0].video.uri
+            generated_videos = operation.result.generated_videos
+            if not generated_videos or not generated_videos[0].video or not generated_videos[0].video.uri:
+                return {
+                    "status": "failed",
+                    "detail": f"Generated video is empty: {operation}",
+                }
+            generated_video_uri: str = generated_videos[0].video.uri
             print(f"DEBUG: Generated video URI: {generated_video_uri}")
             return {
                 "status": "success",
@@ -93,7 +101,7 @@ def generate_video(video_prompt: str, image_gcs_uri: str):
 
 video_generation_agent = Agent(
     name="video_generation_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=prompt.DESCRIPTION,
     instruction=prompt.INSTRUCTIONS,
     output_key="video_generation_output",

@@ -34,7 +34,7 @@ from . import prompt
 
 content_agent = Agent(
     name="social_media_branding_content_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=prompt.CONTENT_DESCRIPTION,
     instruction=prompt.CONTENT_INSTRUCTIONS,
     # input_schema=SocialMediaAgentInput,
@@ -54,7 +54,7 @@ content_agent = Agent(
 
 format_agent = Agent(
     name="format_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=prompt.FORMAT_DESCRIPTION,
     instruction=prompt.FORMAT_INSTRUCTIONS,
     # output_schema=SocialMediaAgentOutput,
