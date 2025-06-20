@@ -4,7 +4,8 @@ import {
     SparklesIcon,
     DocumentTextIcon,
     PhotoIcon,
-    VideoCameraIcon
+    VideoCameraIcon,
+    MicrophoneIcon
 } from '@heroicons/react/24/outline'
 
 import { PlusIcon, MinusIcon } from '@heroicons/react/20/solid'
@@ -17,7 +18,7 @@ import type { Dispatch, SetStateAction } from 'react';
 interface ToggleableItem {
   name: string;
   icon: React.ElementType | any;
-  baseFieldName?: keyof Pick<Base, "trends" | "audiences" | "styles" | "guideline" | "image_prompt" | "video_prompt" | "twitter_post" | "youtube_post" | "tiktok_post" | "instagram_post">;
+  baseFieldName?: keyof Pick<Base, "trends" | "audiences" | "styles" | "guideline" | "image_prompt" | "video_prompt" | "video_narration" | "twitter_post" | "youtube_post" | "tiktok_post" | "instagram_post">;
   isFontAwesome?: boolean;
 }
 
@@ -59,6 +60,11 @@ const intermediate_blocks: ToggleableItem[] = [
         name: 'Video Prompt',
         icon: VideoCameraIcon,
         baseFieldName: 'video_prompt'
+    },
+    {
+        name: 'Video Narration',
+        icon: MicrophoneIcon,
+        baseFieldName: 'video_narration'
     },
 ]
 

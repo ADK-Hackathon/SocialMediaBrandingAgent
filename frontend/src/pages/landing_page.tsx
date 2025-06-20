@@ -81,6 +81,10 @@ const LandingPage = () => {
         value: "",
         enabled: true,
       },
+      video_narration: {
+        value: "",
+        enabled: true,
+      },
 
       // Artifacts
       twitter_post: {

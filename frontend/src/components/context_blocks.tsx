@@ -7,6 +7,7 @@ import ImagePromptBlock from "./blocks/image_prompt_block";
 import VideoPromptBlock from "./blocks/video_prompt_block";
 import type { Base } from "../base";
 import type { Dispatch, SetStateAction } from 'react';
+import VideoNarrationBlock from "./blocks/video_narration_block";
 
 interface ContextBlocksProps {
   base: Base;
@@ -35,7 +36,7 @@ export default function ContextBlocks({ base, setBase }: ContextBlocksProps) {
         </li>
       )}
 
-      {(base.guideline.enabled || base.image_prompt.enabled || base.video_prompt.enabled) && (
+      {(base.guideline.enabled || base.image_prompt.enabled || base.video_prompt.enabled || base.video_narration.enabled) && (
         <li className="col-span-full">
           <h2 className="text-lg font-semibold text-gray-900">Intermediate</h2>
           <div className="mt-2 h-px bg-gray-200" />
@@ -54,6 +55,11 @@ export default function ContextBlocks({ base, setBase }: ContextBlocksProps) {
       {base.video_prompt.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
           <VideoPromptBlock prompt={base.video_prompt.value} />
+        </li>
+      )}
+      {base.video_narration.enabled && (
+        <li className="overflow-hidden rounded-xl border border-gray-200">
+          <VideoNarrationBlock narration={base.video_narration.value} />
         </li>
       )}
     </>

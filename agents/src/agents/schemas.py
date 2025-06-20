@@ -42,6 +42,7 @@ class Base(BaseModel):
     guideline: EnabledField[str]
     image_prompt: EnabledField[str]
     video_prompt: EnabledField[str]
+    video_narration: EnabledField[str]
 
     # ── 4. Final artifacts ────────────────────────────────
     twitter_post: EnabledField[str]
