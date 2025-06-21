@@ -55,7 +55,7 @@ class Base(BaseModel):
     model_config = {
         "populate_by_name": True,          # allows alias use if you add them later
         "frozen": False,                   # set True if you need immutability
-        "extra": "forbid",                 # no undeclared fields
+        "extra": "forbid",                 # no undeclared fields ignore
     }
 
 class SocialMediaAgentInput(BaseModel):

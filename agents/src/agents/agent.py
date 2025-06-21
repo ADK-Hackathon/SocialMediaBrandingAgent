@@ -58,21 +58,20 @@ format_agent = Agent(
     description=prompt.FORMAT_DESCRIPTION,
     instruction=prompt.FORMAT_INSTRUCTIONS,
     # output_schema=SocialMediaAgentOutput,
-    output_key="agent_response",
+    output_key="formated_content_agent_output",
 )
 
 
-# response_agent = Agent(
-#     name="response_agent",
-#     model="gemini-2.0-flash",
-#     instruction="Extract the agent_response from the input. Only return the agent_response as plain text.",
-# )
+response_agent = Agent(
+    name="response_agent",
+    model="gemini-2.5-flash",
+    instruction="Extract the `agent_response` from the final json format output from previous agent. Only return the agent_response as plain text.",
+)
 
 root_agent = SequentialAgent(
     name="social_media_branding_agent",
     sub_agents=[content_agent, 
                 format_agent, 
-                # response_agent
-                ],
+                response_agent],
     description="Executes a sequence of content generation and formatting.",
 )
