@@ -27,6 +27,8 @@ class Style(BaseModel):
 
 class VideoPost(BaseModel):
     video_url: HttpUrl = Field(description="The URL of the video post. Get this URL from the video generation tool.")
+    title: str = Field(description="The title of the video post (e.g. YouTube video title).")
+    description: str = Field(description="A short description of the video post (e.g. YouTube video description).")
 
 
 class Base(BaseModel):
