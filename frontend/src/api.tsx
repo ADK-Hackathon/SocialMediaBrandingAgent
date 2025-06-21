@@ -109,6 +109,13 @@ export const sendMessageToAgentSSE = (
         try {
           const jsonStr = line.slice(6); // Remove 'data: ' prefix
           const data = JSON.parse(jsonStr) as AgentResponse; // AgentResponse is defined above
+          console.log('SSE events before filtering:', data);
+          // Only keep the streaming data (i.e. partial data). This filter out the following data which has partial=false:
+          // 1. FunctionCall events.
+          // 2. FunctionResponse events.
+          // 3. Final reponse that repeats all historical thoughts/text.
+          // Removing this check will also require updating logics in ChatInterface because it messes up the message
+          // completion logics.
           if (data.partial == true) {
             callbacks.onData(data);
           }
