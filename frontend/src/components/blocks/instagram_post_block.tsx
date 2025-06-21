@@ -48,12 +48,10 @@ export default function InstagramBlock({
                         {/* Video/Image Content */}
                         <div className="w-full aspect-square bg-black flex items-center justify-center">
                             {mediaUrl ? (
-                                <video
+                                <img
                                     className="w-full h-full object-cover"
                                     src={mediaUrl}
-                                    controls
-                                    autoPlay
-                                    loop
+                                    alt="Post image."
                                 />
                             ) : (
                                 <div className="flex items-center justify-center w-full h-full">

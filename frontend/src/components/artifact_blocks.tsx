@@ -42,8 +42,8 @@ export default function ArtifactBlocks({ base }: ArtifactBlocksProps) {
       {base.instagram_post.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
           <InstagramPostBlock
-            mediaUrl={base.instagram_post.value.video_url}
-            contentText={base.youtube_post.value.description}
+            mediaUrl={base.instagram_post.value.image_url}
+            contentText={base.instagram_post.value.post_text}
             username="BrandDesigner"
             profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"
           />
