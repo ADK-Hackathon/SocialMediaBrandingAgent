@@ -94,18 +94,24 @@ const LandingPage = () => {
       youtube_post: {
         value: {
           video_url: "",
+          title: "",
+          description: "",
         },
         enabled: true,
       },
       tiktok_post: {
         value: {
           video_url: "",
+          title: "",
+          description: "",
         },
         enabled: true,
       },
       instagram_post: {
         value: {
           video_url: "",
+          title: "",
+          description: "",
         },
         enabled: true,
       },

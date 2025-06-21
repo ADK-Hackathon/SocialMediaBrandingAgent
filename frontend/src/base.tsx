@@ -20,6 +20,8 @@ export interface Style {
 
 export interface VideoPost {
     video_url: string;
+    title: string;
+    description: string;
 }
 
 // Base interface

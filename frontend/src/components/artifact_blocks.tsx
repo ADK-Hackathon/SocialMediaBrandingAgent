@@ -15,7 +15,7 @@ export default function ArtifactBlocks({ base }: ArtifactBlocksProps) {
         <li className="overflow-hidden rounded-xl border border-gray-200">
           <TwitterPostBlock
             contentText={base.twitter_post.value}
-            username="cool_dev"
+            username="BrandDesigner"
             profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"
           />
         </li>
@@ -24,9 +24,10 @@ export default function ArtifactBlocks({ base }: ArtifactBlocksProps) {
         <li className="overflow-hidden rounded-xl border border-gray-200">
           <YouTubePostBlock
             videoUrl={base.youtube_post.value.video_url}
+            descriptionSnippet={base.youtube_post.value.description}
             thumbnailUrl="https://randomuser.me/api/portraits/men/32.jpg"
-            videoTitle="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
-            channelName="cool_dev"
+            videoTitle={base.youtube_post.value.title}
+            channelName="branding_channel"
           />
         </li>
       )}
@@ -42,8 +43,8 @@ export default function ArtifactBlocks({ base }: ArtifactBlocksProps) {
         <li className="overflow-hidden rounded-xl border border-gray-200">
           <InstagramPostBlock
             mediaUrl={base.instagram_post.value.video_url}
-            contentText="Exciting times for AI! Also, new discoveries in space exploration! #AI #SpaceExploration #Innovation"
-            username="cool_dev"
+            contentText={base.youtube_post.value.description}
+            username="BrandDesigner"
             profilePicUrl="https://randomuser.me/api/portraits/men/32.jpg"
           />
         </li>
