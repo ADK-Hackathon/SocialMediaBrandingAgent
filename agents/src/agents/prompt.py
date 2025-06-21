@@ -71,7 +71,7 @@ First you should follow user query to understand the user's request and change o
 8. If "enable" in 'image_prompt' is true, add the image_prompt from "idea_generation_output" to the "image_prompt" field, 
 and apply "image_generation_agent" to generate an image using the "image_prompt" and store the image url in the "image_url" field.
 9. If "enable" in 'video_prompt' is true, add the video_prompt from "idea_generation_output" to the "video_prompt" field, 
-and apply "video_generation_agent" with given "image_url" and "video_prompt" and "video_narration" to generate a video with sand store the video url in the "video_url" field.
+and apply "video_generation_agent" with given "image_url" and "video_prompt" and "video_narration" to generate a video with narration and save the video url in the "video_url" field.
 10. If "enable" in 'twitter_post' is true, you should update the "twitter_post" field with the "text_prompt" from "idea_generation_output".
 
 Note that if user is trying to iterate on the artifacts you have previously generated, you should only use specific field to update.

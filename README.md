@@ -20,7 +20,7 @@ Key features include:
 
 ## How we built it
 
-   <img src="agents/images/agent_structure.png" alt="Agent Structure" width="500" height="300">
+   <img src="agents/images/agent_structure.png" alt="Agent Structure" width="700" height="500">
 
 We used **Google ADK (Agent Development Kit)** to build a multi-agent system capable of orchestrating content generation workflows. Each agent has a specialized function:
 - **Trend Scout Agent** pulls real-time social trends using APIs and web scraping.
