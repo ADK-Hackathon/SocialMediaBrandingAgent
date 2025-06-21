@@ -23,7 +23,7 @@ storage_client = storage.Client(project=os.getenv("GOOGLE_CLOUD_PROJECT"))
 GCS_BUCKET_NAME = "smba-assets"  # Public to internet
 
 
-def generate_image(img_prompt: str, tool_context: "ToolContext"):
+def generate_image(img_prompt: str):
     """
     Generates an image based on the prompt.
 
@@ -49,7 +49,10 @@ def generate_image(img_prompt: str, tool_context: "ToolContext"):
     if not response.generated_images:
         return {"status": "failed"}
 
-    image_bytes = response.generated_images[0].image.image_bytes
+    generated_image = response.generated_images[0].image
+    if not generated_image:
+        return {"status": "failed"}
+    image_bytes = generated_image.image_bytes
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     gcs_object_name = f"images/{timestamp}.png"

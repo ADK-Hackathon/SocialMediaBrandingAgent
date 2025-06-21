@@ -35,7 +35,8 @@ Note that if user doesn't mention specific style in the "video_prompt", augment 
 
 After you have the intermediate artifacts ready, you should further generate the final artifacts by following these steps:
 1. If 'twitter_post' is enabled, you should generate a tweet text based on the 'styles', 'trends', and 'guideline'.
-2. If 'youtube_post' or 'tiktok_post' or 'instagram_post' is enabled, you should generate a video using the "video_generation_agent". Note that you'll need to pass the 'video_prompt' and a narration text to the "video_generation_agent".
+2. If 'instgram_post' is enabled, you should generate an image using `image_generation_agent`. Note that you'll need to pass the 'image_prompt' to the `image_generation_agent`.
+2. If 'youtube_post' or 'tiktok_post' is enabled, you should generate a video using the `video_generation_agent`. Note that you'll need to pass the 'video_prompt' and a narration text to the `video_generation_agent`.
 It will return a video URL and you should store that in the video_url field.
 
 Note that if user is trying to iterate on the artifacts you have previously generated.

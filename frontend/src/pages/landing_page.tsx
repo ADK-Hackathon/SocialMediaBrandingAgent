@@ -109,9 +109,8 @@ const LandingPage = () => {
       },
       instagram_post: {
         value: {
-          video_url: "",
-          title: "",
-          description: "",
+          image_url: "",
+          post_text: "",
         },
         enabled: true,
       },

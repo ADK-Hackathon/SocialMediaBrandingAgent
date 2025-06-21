@@ -18,6 +18,11 @@ export interface Style {
     selected: boolean;
 }
 
+export interface ImagePost {
+    image_url: string;
+    post_text: string;
+}
+
 export interface VideoPost {
     video_url: string;
     title: string;
@@ -43,7 +48,7 @@ export interface Base {
     twitter_post: EnabledField<string>;
     youtube_post: EnabledField<VideoPost>;
     tiktok_post: EnabledField<VideoPost>;
-    instagram_post: EnabledField<VideoPost>;
+    instagram_post: EnabledField<ImagePost>;
 }
 
 // Helper method to set if the field is enabled.

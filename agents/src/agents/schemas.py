@@ -25,6 +25,10 @@ class Style(BaseModel):
     selected: bool = Field(default=False, description="Whether the style is selected. If selected, we want the generated content to be in this style.")
 
 
+class ImagePost(BaseModel):
+    image_url: HttpUrl = Field(description="The URL of the image post. Get this URL from the image generation tool.")
+    post_text: str = Field(description="The content text of the image post.")
+
 class VideoPost(BaseModel):
     video_url: HttpUrl = Field(description="The URL of the video post. Get this URL from the video generation tool.")
     title: str = Field(description="The title of the video post (e.g. YouTube video title).")
@@ -50,7 +54,7 @@ class Base(BaseModel):
     twitter_post: EnabledField[str]
     youtube_post: EnabledField[VideoPost]
     tiktok_post: EnabledField[VideoPost]
-    instagram_post: EnabledField[VideoPost]
+    instagram_post: EnabledField[ImagePost]
 
     model_config = {
         "populate_by_name": True,          # allows alias use if you add them later
