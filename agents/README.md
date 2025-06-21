@@ -2,6 +2,7 @@
 
 The backend API for the Social Media Branding Agent (SMBA) project, built using Google Agent Development Kit (ADK).
 
+![Social Media Branding Agent Architecture](images/smba-architecture.png)
 
 ### Installation
 1. **Make sure if poetry is installed for package management**
