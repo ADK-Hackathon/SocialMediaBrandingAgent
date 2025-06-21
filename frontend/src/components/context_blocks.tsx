@@ -44,22 +44,22 @@ export default function ContextBlocks({ base, setBase }: ContextBlocksProps) {
       )}
       {base.guideline.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
-          <GuidelineBlock prompt={base.guideline.value} />
+          <GuidelineBlock base={base} setBase={setBase} />
         </li>
       )}
       {base.image_prompt.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
-          <ImagePromptBlock prompt={base.image_prompt.value} />
+          <ImagePromptBlock base={base} setBase={setBase} />
         </li>
       )}
       {base.video_prompt.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
-          <VideoPromptBlock prompt={base.video_prompt.value} />
+          <VideoPromptBlock base={base} setBase={setBase} />
         </li>
       )}
       {base.video_narration.enabled && (
         <li className="overflow-hidden rounded-xl border border-gray-200">
-          <VideoNarrationBlock narration={base.video_narration.value} />
+          <VideoNarrationBlock base={base} setBase={setBase} />
         </li>
       )}
     </>
