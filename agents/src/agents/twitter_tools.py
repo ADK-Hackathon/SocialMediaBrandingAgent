@@ -1,6 +1,6 @@
 import os
 import requests
-
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -63,9 +63,12 @@ def get_trends():
 
     response = requests.request("GET", url, headers=headers, params=querystring)
 
-    print(response.text)
 
-    return response.text ## only return the top 10 trends
+    # Parse response and get top 20 trends
+    trends = json.loads(response.text)
+    top_20_trends = trends[:20] if len(trends) > 20 else trends
+    print(top_20_trends)
+    return json.dumps(top_20_trends)
 
 def get_user_posts(userId: str, cursor: str):
     """Retrieves the current weather report for a specified city.

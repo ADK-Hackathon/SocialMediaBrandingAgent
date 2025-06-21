@@ -33,9 +33,9 @@ export interface Base {
 
     // Intermediate
     guideline: EnabledField<string>;
-    // audio_prompt: EnabledField<string>;
     image_prompt: EnabledField<string>;
     video_prompt: EnabledField<string>;
+    video_narration: EnabledField<string>;
 
     // Artifacts
     twitter_post: EnabledField<string>;
@@ -47,7 +47,7 @@ export interface Base {
 // Helper method to set if the field is enabled.
 export function setEnabledField(
     base: Base, 
-    fieldName: keyof Pick<Base, "trends" | "audiences" | "styles" | "guideline" |  "image_prompt" | "video_prompt" | "twitter_post" | "youtube_post" | "tiktok_post" | "instagram_post">,
+    fieldName: keyof Pick<Base, "trends" | "audiences" | "styles" | "guideline" | "image_prompt" | "video_prompt" | "video_narration" | "twitter_post" | "youtube_post" | "tiktok_post" | "instagram_post">,
     enabled: boolean): Base {
     const newBase = {...base};
     switch (fieldName) {
@@ -63,14 +63,14 @@ export function setEnabledField(
         case "guideline":
             newBase.guideline.enabled = enabled;
             break;
-        // case "audio_prompt":
-        //     newBase.audio_prompt.enabled = enabled;
-        //     break;
         case "image_prompt":
             newBase.image_prompt.enabled = enabled;
             break;
         case "video_prompt":
             newBase.video_prompt.enabled = enabled;
+            break;
+        case "video_narration":
+            newBase.video_narration.enabled = enabled;
             break;
         case "twitter_post":
             newBase.twitter_post.enabled = enabled;

@@ -17,7 +17,7 @@ export default function TrendsBlock({ base, setBase }: TrendsBlockProps) {
         trending: []
     };
 
-    const trendingTopics = trends.trending || [];
+    const trendingTopics = Array.from(new Set(trends.trending)) || [];
 
     const handleTrendSelect = (trend: string) => {
         if (trend !== trends.selected_trend) {
