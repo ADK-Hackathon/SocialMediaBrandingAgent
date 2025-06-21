@@ -41,13 +41,14 @@ def advanced_search(query: str, queryType: str, cursor: str) -> dict:
     return response.text
 
 def get_trends():
-    """Retrieves the current weather report for a specified city.
+    """
+    Retrieve the current hot topics/trends on X (Twitter).
 
     Args:
         None.
 
     Returns:
-        The list of trends.
+        The list of trends (sorted from most popular to less popular).
     """
     print(f"--- Tool: get trends ---") # Log tool execution
     url = "https://api.twitterapi.io/twitter/trends"
@@ -63,15 +64,21 @@ def get_trends():
 
     response = requests.request("GET", url, headers=headers, params=querystring)
 
+    data = json.loads(response.text)
+    trends = data.get("trends", [])[:20]
+    trend_names = []
+    for item in trends:
+        trend = item.get("trend", {})
+        name = trend.get("name")
+        if name is not None:
+            trend_names.append(name)
 
-    # Parse response and get top 20 trends
-    trends = json.loads(response.text)
-    top_20_trends = trends[:20] if len(trends) > 20 else trends
-    print(top_20_trends)
-    return json.dumps(top_20_trends)
+    print(trend_names)
+    return trend_names
 
 def get_user_posts(userId: str, cursor: str):
-    """Retrieves the current weather report for a specified city.
+    """
+    Given a userId of a X (Twitter), retrieve their historical posts.
 
     Args:
         userId (str): The user id that we want to retrieve the posts from.
