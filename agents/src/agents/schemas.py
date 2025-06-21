@@ -40,7 +40,6 @@ class Base(BaseModel):
 
     # ── 3. Intermediate artifacts ─────────────────────────
     guideline: EnabledField[str]
-    audio_prompt: EnabledField[str]
     image_prompt: EnabledField[str]
     video_prompt: EnabledField[str]
     video_narration: EnabledField[str]
