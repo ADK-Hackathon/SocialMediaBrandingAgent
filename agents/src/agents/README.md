@@ -1,7 +1,7 @@
 
 # Social Media Branding Agent
 
-   <img src="../../images/logo.png" alt="Agent Structure" width="500" height="300">
+   <img src="../../images/logo.png" alt="Agent Structure" width="400" height="270">
 
 ## Inspiration
 
